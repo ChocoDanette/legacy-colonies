@@ -29,3 +29,6 @@ type = "required"
 versionRange = "${minecolonies_version_range}"
 ordering = "AFTER"
 side = "BOTH"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"

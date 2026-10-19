@@ -1,11 +1,21 @@
 package com.chocodanette.legacycolonies;
 
-import com.minecolonies.api.colony.IColonyManager;
+import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
+import com.minecolonies.api.IMinecoloniesAPI;
+import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
+import com.minecolonies.api.tileentities.MinecoloniesTileEntities;
 import com.mojang.logging.LogUtils;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.slf4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * MineColonies addon for the TerraFirmaCraft Legacy modpack.
@@ -18,11 +28,37 @@ public class LegacyColonies
 
     public LegacyColonies(final IEventBus modBus)
     {
+        ModBlocks.BLOCKS.register(modBus);
+        ModBlocks.ITEMS.register(modBus);
+        ModBuildings.BUILDINGS.register(modBus);
         modBus.addListener(this::onCommonSetup);
+        modBus.addListener(this::onCreativeTab);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
     {
-        LOGGER.info("Legacy Colonies loaded, MineColonies colony manager: {}", IColonyManager.getInstance().getClass().getName());
+        event.enqueueWork(LegacyColonies::addHutsToBuildingBlockEntity);
+        IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
+        LOGGER.info("Legacy Colonies loaded");
+    }
+
+    /**
+     * MineColonies builds its hut block entity type from its own huts only: add ours to it.
+     */
+    private static void addHutsToBuildingBlockEntity()
+    {
+        final BlockEntityType<?> type = MinecoloniesTileEntities.BUILDING.get();
+        final Set<Block> blocks = new HashSet<>(type.validBlocks);
+        blocks.add(ModBlocks.COLONY_CAMPFIRE.get());
+        blocks.add(ModBlocks.BUILDER_POST.get());
+        type.validBlocks = blocks;
+    }
+
+    private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)
+    {
+        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
+        {
+            event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
+        }
     }
 }

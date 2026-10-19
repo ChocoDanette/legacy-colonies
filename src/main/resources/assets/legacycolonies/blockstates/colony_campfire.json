@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "legacycolonies:block/colony_campfire"
+    },
+    "facing=east": {
+      "model": "legacycolonies:block/colony_campfire",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "legacycolonies:block/colony_campfire",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "legacycolonies:block/colony_campfire",
+      "y": 270
+    }
+  }
+}
