@@ -1,7 +1,8 @@
 # Changelog
 
 Each version is published as a GitHub release with its jar. To release, set `mod_version` in
-`gradle.properties`, add its section below, merge to `main`, then push the tag `v<mod_version>`.
+`gradle.properties`, add its section below, merge to `main`, then run the Release workflow
+from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
 ## 0.2.1
 
