@@ -54,6 +54,7 @@ public class LegacyColonies
         final Set<Block> blocks = new HashSet<>(type.validBlocks);
         blocks.add(ModBlocks.COLONY_CAMPFIRE.get());
         blocks.add(ModBlocks.BUILDER_POST.get());
+        blocks.add(ModBlocks.INN.get());
         type.validBlocks = blocks;
     }
 
@@ -62,6 +63,7 @@ public class LegacyColonies
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
+            event.accept(ModBlocks.INN_ITEM.get());
         }
     }
 }
