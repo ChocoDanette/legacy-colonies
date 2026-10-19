@@ -1,6 +1,7 @@
 package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
+import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
 import com.minecolonies.api.tileentities.MinecoloniesTileEntities;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.slf4j.Logger;
 
@@ -33,6 +35,7 @@ public class LegacyColonies
         ModBuildings.BUILDINGS.register(modBus);
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(this::onCreativeTab);
+        NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
