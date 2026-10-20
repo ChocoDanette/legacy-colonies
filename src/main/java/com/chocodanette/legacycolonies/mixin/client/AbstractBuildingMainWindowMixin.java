@@ -47,6 +47,8 @@ public abstract class AbstractBuildingMainWindowMixin
         confirm.setID(CONFIRM_ID);
         confirm.setImage(ResourceLocation.fromNamespaceAndPath("minecolonies", "textures/gui/builderhut/builder_button_medium_large.png"));
         confirm.setSize(buttonBuild.getWidth(), buttonBuild.getHeight());
+        // A button made in code starts with a zero-sized text box, which setSize only scales: give the text the whole button.
+        confirm.setTextRenderBox(buttonBuild.getWidth(), buttonBuild.getHeight());
         confirm.setColors(0);
         confirm.setText(Component.translatable("com.legacycolonies.confirm.button"));
         confirm.setPosition(buttonBuild.getX(), freeRow(parent, buttonBuild));
