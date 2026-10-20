@@ -6,14 +6,17 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 
 ## 0.5.0
 
-- Builder's register (`legacycolonies:register`, 3 straw and a stick): right click a hut with it to validate a building
-  of the player's own design. The hut must stand inside a closed, covered room; the room's blocks are checked against
-  the rules of the hut's next level. When they pass, the hut reaches that level as if the builder had built it (quests,
-  Legacy stages and advancements follow), and the beds, racks and chests of the room are registered. Otherwise the
-  chat lists what is missing.
-- Rules are data files `data/<namespace>/legacycolonies/building_rules/<name>.json` (hut, then per level: `max_volume`,
-  `door`, `light`, and `requires` with block ids or `#tags` and a count). A modpack can replace them. The jar ships the
-  inn's level 1: a closed room only.
+- Huts are placed without MineColonies' "use the build tool" window. Right click a block with a hut to place it there,
+  unbuilt (level 0); break it to get it back. Right click the air with a hut to open the build tool.
+- Buildings of the player's own design: build around an unbuilt hut, open its window and press "Confirm building",
+  next to the build button. The room around the hut is checked against the rules of the hut's next level. When they
+  pass, the hut reaches that level as if the builder had built it (quests, Legacy stages and advancements follow), and
+  the beds, racks and chests of the room are registered. Otherwise the chat lists what is missing. The button only
+  shows for hut levels that have rules.
+- Rules are data files `data/<namespace>/legacycolonies/building_rules/<name>.json` (hut, then per level:
+  `max_volume`, `closed`, `door`, `light`, and `requires` with block ids or `#tags` and a count). With
+  `"closed": false` the room only needs a roof: doorways and windows without glass are allowed. A modpack can replace
+  the rules. The jar ships the inn's level 1: a covered room, openings allowed.
 
 ## 0.4.0
 

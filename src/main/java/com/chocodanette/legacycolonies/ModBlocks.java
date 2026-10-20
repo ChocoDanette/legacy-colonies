@@ -3,7 +3,6 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
 import com.chocodanette.legacycolonies.block.BlockInn;
-import com.chocodanette.legacycolonies.item.ItemRegister;
 import com.minecolonies.api.items.ItemBlockHut;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -26,8 +25,6 @@ public final class ModBlocks
       ITEMS.register(BlockColonyCampfire.NAME, () -> new ItemBlockHut(COLONY_CAMPFIRE.get(), new Item.Properties()));
     public static final DeferredItem<Item> INN_ITEM =
       ITEMS.register(BlockInn.NAME, () -> new ItemBlockHut(INN.get(), new Item.Properties()));
-    public static final DeferredItem<Item> REGISTER =
-      ITEMS.register(ItemRegister.NAME, () -> new ItemRegister(new Item.Properties().stacksTo(1)));
 
     private ModBlocks()
     {

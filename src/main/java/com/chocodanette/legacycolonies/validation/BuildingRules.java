@@ -34,16 +34,19 @@ public record BuildingRules(ResourceLocation hut, Map<String, LevelRules> levels
 
     /**
      * @param maxVolume largest number of open blocks the room may hold; a bigger one is taken as not closed.
+     * @param closed    whether the room must be closed on all sides; when false, it only needs a roof (doorways and
+     *                  windows without glass are allowed, for the primitive age).
      * @param door      whether the room needs a door.
      * @param light     whether the room needs a light source.
      * @param requires  blocks the room must contain.
      */
-    public record LevelRules(int maxVolume, boolean door, boolean light, List<Requirement> requires)
+    public record LevelRules(int maxVolume, boolean closed, boolean door, boolean light, List<Requirement> requires)
     {
         public static final int DEFAULT_MAX_VOLUME = 1000;
 
         public static final Codec<LevelRules> CODEC = RecordCodecBuilder.create(instance -> instance.group(
           Codec.intRange(1, 32768).optionalFieldOf("max_volume", DEFAULT_MAX_VOLUME).forGetter(LevelRules::maxVolume),
+          Codec.BOOL.optionalFieldOf("closed", true).forGetter(LevelRules::closed),
           Codec.BOOL.optionalFieldOf("door", true).forGetter(LevelRules::door),
           Codec.BOOL.optionalFieldOf("light", true).forGetter(LevelRules::light),
           Requirement.CODEC.listOf().optionalFieldOf("requires", List.of()).forGetter(LevelRules::requires)

@@ -13,7 +13,9 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Loads the building rules of every datapack, one file per hut.
@@ -44,6 +46,21 @@ public final class BuildingRulesManager extends SimpleJsonResourceReloadListener
     public BuildingRules get(final ResourceLocation hut)
     {
         return rules.get(hut);
+    }
+
+    /**
+     * Every hut level that has rules, as {@link #key} strings.
+     */
+    public Set<String> confirmableLevels()
+    {
+        final Set<String> levels = new HashSet<>();
+        rules.values().forEach(hut -> hut.levels().keySet().forEach(level -> levels.add(hut.hut() + "#" + level)));
+        return levels;
+    }
+
+    public static String key(final ResourceLocation building, final int level)
+    {
+        return building + "#" + level;
     }
 
     @SubscribeEvent

@@ -30,11 +30,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Checks a building the player designed around a hut against the hut's rules, and raises the hut one level when it passes.
+ * Checks a building the player designed around a hut ("confirm building" in the hut window) against the hut's rules, and raises the hut one level when it passes.
  */
 public final class BuildingValidator
 {
-    private static final String KEY = "com.legacycolonies.register.";
+    private static final String KEY = "com.legacycolonies.confirm.";
 
     private BuildingValidator()
     {
@@ -75,10 +75,16 @@ public final class BuildingValidator
             return;
         }
 
-        final RoomScanner.Room room = RoomScanner.scan(level, hutPos, levelRules.maxVolume());
-        if (!room.closed())
+        final RoomScanner.Room room = RoomScanner.scan(level, hutPos, levelRules.maxVolume(), levelRules.closed());
+        switch (room.problem())
         {
-            fail(player, Component.translatable(KEY + "not_closed", levelRules.maxVolume()));
+            case NOT_CLOSED -> fail(player, Component.translatable(KEY + "not_closed"));
+            case TOO_BIG -> fail(player, Component.translatable(KEY + "too_big", levelRules.maxVolume()));
+            case NOT_COVERED -> fail(player, Component.translatable(KEY + "not_covered"));
+            case NONE -> { }
+        }
+        if (room.problem() != RoomScanner.Problem.NONE)
+        {
             return;
         }
 

@@ -17,12 +17,29 @@ public final class RoomScanner
     {
     }
 
+    public enum Problem
+    {
+        NONE,
+        /**
+         * The open blocks reach the outside (sky) of a room that must be closed.
+         */
+        NOT_CLOSED,
+        /**
+         * More open blocks than the rules allow: the room is too big, or leaks outside under trees or overhangs.
+         */
+        TOO_BIG,
+        /**
+         * No covered open block next to the hut: it is not under a roof.
+         */
+        NOT_COVERED
+    }
+
     /**
-     * @param open    blocks a player could walk through (air, torches...), inside the room.
+     * @param open    covered blocks a player could walk through (air, torches...), inside the room.
      * @param shell   blocks touching the open ones: floor, walls, roof, furniture, doors. Includes the hut.
-     * @param closed  false when the open blocks reach the sky or exceed the volume limit.
+     * @param problem why the room cannot be used, or {@link Problem#NONE}.
      */
-    public record Room(Set<BlockPos> open, Set<BlockPos> shell, boolean closed)
+    public record Room(Set<BlockPos> open, Set<BlockPos> shell, Problem problem)
     {
         public BlockPos min()
         {
@@ -49,10 +66,15 @@ public final class RoomScanner
         }
     }
 
-    public static Room scan(final Level level, final BlockPos hut, final int maxVolume)
+    /**
+     * @param closed when false, openings (a doorway, a window without glass) are allowed: open blocks under the sky are
+     *               the outside and end the room there, instead of failing the scan.
+     */
+    public static Room scan(final Level level, final BlockPos hut, final int maxVolume, final boolean closed)
     {
         final Set<BlockPos> open = new HashSet<>();
         final Set<BlockPos> shell = new HashSet<>();
+        final Set<BlockPos> outside = new HashSet<>();
         final ArrayDeque<BlockPos> queue = new ArrayDeque<>();
         shell.add(hut);
         queue.add(hut);
@@ -63,27 +85,36 @@ public final class RoomScanner
             for (final Direction direction : Direction.values())
             {
                 final BlockPos next = current.relative(direction);
-                if (open.contains(next) || shell.contains(next))
+                if (open.contains(next) || shell.contains(next) || outside.contains(next))
                 {
                     continue;
                 }
                 if (!level.isLoaded(next))
                 {
-                    return new Room(open, shell, false);
+                    return new Room(open, shell, Problem.TOO_BIG);
                 }
                 if (!level.getBlockState(next).getCollisionShape(level, next).isEmpty())
                 {
                     shell.add(next);
                     continue;
                 }
-                if (level.canSeeSky(next) || open.size() >= maxVolume)
+                if (level.canSeeSky(next))
                 {
-                    return new Room(open, shell, false);
+                    if (closed)
+                    {
+                        return new Room(open, shell, Problem.NOT_CLOSED);
+                    }
+                    outside.add(next);
+                    continue;
+                }
+                if (open.size() >= maxVolume)
+                {
+                    return new Room(open, shell, Problem.TOO_BIG);
                 }
                 open.add(next);
                 queue.add(next);
             }
         }
-        return new Room(open, shell, !open.isEmpty());
+        return new Room(open, shell, open.isEmpty() ? Problem.NOT_COVERED : Problem.NONE);
     }
 }

@@ -2,12 +2,13 @@ package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
-import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
+import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
+import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
+import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
 import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
 import com.chocodanette.legacycolonies.validation.BuildingRulesManager;
-import com.chocodanette.legacycolonies.validation.RegisterHandler;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
@@ -45,11 +46,11 @@ public class LegacyColonies
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(this::onCreativeTab);
         modBus.addListener(this::onRegisterPayloads);
-        NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
+        NeoForge.EVENT_BUS.register(HutPlacementHandler.class);
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
-        NeoForge.EVENT_BUS.register(RegisterHandler.class);
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
+        NeoForge.EVENT_BUS.addListener(BuildingRulesPayload::onDatapackSync);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
@@ -76,7 +77,10 @@ public class LegacyColonies
 
     private void onRegisterPayloads(final RegisterPayloadHandlersEvent event)
     {
-        event.registrar("1").playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle);
+        event.registrar("1")
+          .playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle)
+          .playToClient(BuildingRulesPayload.TYPE, BuildingRulesPayload.STREAM_CODEC, BuildingRulesPayload::handle)
+          .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle);
     }
 
     private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)
@@ -85,10 +89,6 @@ public class LegacyColonies
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
             event.accept(ModBlocks.INN_ITEM.get());
-        }
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
-        {
-            event.accept(ModBlocks.REGISTER.get());
         }
     }
 }
