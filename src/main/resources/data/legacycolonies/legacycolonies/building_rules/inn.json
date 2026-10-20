@@ -1,0 +1,10 @@
+{
+  "hut": "legacycolonies:inn",
+  "levels": {
+    "1": {
+      "closed": false,
+      "door": false,
+      "light": false
+    }
+  }
+}

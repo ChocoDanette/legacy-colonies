@@ -4,6 +4,20 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.5.0
+
+- Huts are placed without MineColonies' "use the build tool" window. Right click a block with a hut to place it there,
+  unbuilt (level 0); break it to get it back. Right click the air with a hut to open the build tool.
+- Buildings of the player's own design: build around an unbuilt hut, open its window and press "Confirm building",
+  next to the build button. The room around the hut is checked against the rules of the hut's next level. When they
+  pass, the hut reaches that level as if the builder had built it (quests, Legacy stages and advancements follow), and
+  the beds, racks and chests of the room are registered. Otherwise the chat lists what is missing. The button only
+  shows for hut levels that have rules.
+- Rules are data files `data/<namespace>/legacycolonies/building_rules/<name>.json` (hut, then per level:
+  `max_volume`, `closed`, `door`, `light`, and `requires` with block ids or `#tags` and a count). With
+  `"closed": false` the room only needs a roof: doorways and windows without glass are allowed. A modpack can replace
+  the rules. The jar ships the inn's level 1: a covered room, openings allowed.
+
 ## 0.4.0
 
 - Materials per building: right click a hut with a TFC log or mud brick block to choose that material. When the
