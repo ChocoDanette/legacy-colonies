@@ -61,6 +61,7 @@ public final class BuilderPostHandler
             post.setStructurePack(colony.getStructurePack());
             post.setBuildingLevel(POST_LEVEL);
             post.onUpgradeComplete(null, POST_LEVEL);
+            CampfireInteractionHandler.setDefaultFill(post, level, campfire.getPosition());
         }
     }
 

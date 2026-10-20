@@ -8,6 +8,7 @@
   "com.legacycolonies.building.colony_campfire.desc": "Founds the colony and marks its centre.",
   "com.legacycolonies.building.inn": "Inn",
   "com.legacycolonies.building.inn.desc": "Shelter for citizens without a house. Takes no visitors.",
+  "com.legacycolonies.fill.chosen": "Builder's fill block: %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mud bricks for this building: %s",
   "com.legacycolonies.material.chosen.wood": "Wood for this building: %s"
 }

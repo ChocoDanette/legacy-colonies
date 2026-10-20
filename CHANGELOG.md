@@ -12,6 +12,11 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 - The resource list shown before building lists the chosen materials.
 - Daubed wattle (`tfc:wattle/unstained` and the stained ones) is requested as a wattle and a daub, plus the dye
   for stained wattle, and the builder places the finished block.
+- The builder clears blocks by hand when it has no fitting tool, instead of asking for a pickaxe.
+- Sneak and right click the colony campfire with an empty hand to open the builder's stock, where it leaves its
+  unused materials.
+- The builder fills the ground with TFC dirt: by default the dirt the campfire stands on. Right click the campfire
+  with another TFC dirt block to change it.
 
 ## 0.3.0
 

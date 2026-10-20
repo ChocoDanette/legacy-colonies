@@ -1,6 +1,7 @@
 package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
+import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
@@ -44,6 +45,7 @@ public class LegacyColonies
         modBus.addListener(this::onRegisterPayloads);
         NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
+        NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)

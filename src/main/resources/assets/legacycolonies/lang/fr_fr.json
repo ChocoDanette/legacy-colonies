@@ -8,6 +8,7 @@
   "com.legacycolonies.building.colony_campfire.desc": "Fonde la colonie et en marque le centre.",
   "com.legacycolonies.building.inn": "Auberge",
   "com.legacycolonies.building.inn.desc": "Refuge des citoyens sans maison. Ne reçoit pas de visiteurs.",
+  "com.legacycolonies.fill.chosen": "Remblai du bâtisseur : %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
 }
