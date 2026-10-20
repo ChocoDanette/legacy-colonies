@@ -4,7 +4,6 @@ import com.chocodanette.legacycolonies.LegacyColonies;
 import com.chocodanette.legacycolonies.validation.BuildingRulesManager;
 import com.chocodanette.legacycolonies.validation.ClientBuildingRules;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -26,14 +25,30 @@ public record BuildingRulesPayload(Set<String> levels) implements CustomPacketPa
       new Type<>(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, "building_rules"));
 
     public static final StreamCodec<FriendlyByteBuf, BuildingRulesPayload> STREAM_CODEC =
-      ByteBufCodecs.<FriendlyByteBuf, String>collection(HashSet::new, ByteBufCodecs.STRING_UTF8)
-        .map(BuildingRulesPayload::new, BuildingRulesPayload::levels);
+      StreamCodec.of(BuildingRulesPayload::write, BuildingRulesPayload::read);
 
     @NotNull
     @Override
     public Type<? extends CustomPacketPayload> type()
     {
         return TYPE;
+    }
+
+    private static void write(final FriendlyByteBuf buf, final BuildingRulesPayload payload)
+    {
+        buf.writeVarInt(payload.levels.size());
+        payload.levels.forEach(buf::writeUtf);
+    }
+
+    private static BuildingRulesPayload read(final FriendlyByteBuf buf)
+    {
+        final Set<String> levels = new HashSet<>();
+        final int count = buf.readVarInt();
+        for (int i = 0; i < count; i++)
+        {
+            levels.add(buf.readUtf());
+        }
+        return new BuildingRulesPayload(levels);
     }
 
     public static void handle(final BuildingRulesPayload payload, final IPayloadContext context)
