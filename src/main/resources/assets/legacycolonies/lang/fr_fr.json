@@ -10,5 +10,18 @@
   "com.legacycolonies.building.inn.desc": "Refuge des citoyens sans maison. Ne reçoit pas de visiteurs.",
   "com.legacycolonies.fill.chosen": "Remblai du bâtisseur : %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
-  "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
+  "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s",
+  "com.legacycolonies.register.failed": "%s ne peut pas passer au niveau %s :",
+  "com.legacycolonies.register.max_level": "Cette hutte est déjà à son niveau maximum.",
+  "com.legacycolonies.register.missing.block": "il manque %s × %s (%s/%s)",
+  "com.legacycolonies.register.missing.door": "il manque une porte",
+  "com.legacycolonies.register.missing.light": "il manque une source de lumière",
+  "com.legacycolonies.register.no_colony": "Cette hutte n'appartient à aucune colonie.",
+  "com.legacycolonies.register.no_permission": "Tu n'as pas le droit de gérer les huttes de cette colonie.",
+  "com.legacycolonies.register.no_rules": "Le niveau %s de cette hutte ne peut pas être validé au registre : demande-le au bâtisseur.",
+  "com.legacycolonies.register.not_closed": "La pièce autour de la hutte n'est pas fermée (ouverture vers l'extérieur, ou plus de %s blocs d'air). Pose la hutte à l'intérieur.",
+  "com.legacycolonies.register.success": "%s passe au niveau %s !",
+  "com.legacycolonies.register.work_order": "Un chantier est en cours pour cette hutte : annule-le ou attends qu'il soit fini.",
+  "item.legacycolonies.register": "Registre du bâtisseur",
+  "item.legacycolonies.register.tooltip": "Clic droit sur une hutte pour valider le bâtiment construit autour."
 }

@@ -4,6 +4,17 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.5.0
+
+- Builder's register (`legacycolonies:register`, 3 straw and a stick): right click a hut with it to validate a building
+  of the player's own design. The hut must stand inside a closed, covered room; the room's blocks are checked against
+  the rules of the hut's next level. When they pass, the hut reaches that level as if the builder had built it (quests,
+  Legacy stages and advancements follow), and the beds, racks and chests of the room are registered. Otherwise the
+  chat lists what is missing.
+- Rules are data files `data/<namespace>/legacycolonies/building_rules/<name>.json` (hut, then per level: `max_volume`,
+  `door`, `light`, and `requires` with block ids or `#tags` and a count). A modpack can replace them. The jar ships the
+  inn's level 1: a closed room only.
+
 ## 0.4.0
 
 - Materials per building: right click a hut with a TFC log or mud brick block to choose that material. When the

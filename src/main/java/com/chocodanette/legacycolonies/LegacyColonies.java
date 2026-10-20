@@ -6,6 +6,8 @@ import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
+import com.chocodanette.legacycolonies.validation.BuildingRulesManager;
+import com.chocodanette.legacycolonies.validation.RegisterHandler;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
@@ -46,6 +48,8 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(RegisterHandler.class);
+        NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
@@ -81,6 +85,10 @@ public class LegacyColonies
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
             event.accept(ModBlocks.INN_ITEM.get());
+        }
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
+        {
+            event.accept(ModBlocks.REGISTER.get());
         }
     }
 }
