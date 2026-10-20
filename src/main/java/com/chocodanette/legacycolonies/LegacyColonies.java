@@ -1,9 +1,15 @@
 package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
+import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
+import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
+import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
+import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
+import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
+import com.minecolonies.api.eventbus.events.colony.buildings.BuildingRemovedModEvent;
 import com.minecolonies.api.tileentities.MinecoloniesTileEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -14,6 +20,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
@@ -35,13 +42,18 @@ public class LegacyColonies
         ModBuildings.BUILDINGS.register(modBus);
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(this::onCreativeTab);
+        modBus.addListener(this::onRegisterPayloads);
         NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
+        NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
+        NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(LegacyColonies::addHutsToBuildingBlockEntity);
+        event.enqueueWork(() -> PlacementHandlers.add(new DaubedWattlePlacementHandler()));
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
+        IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);
         LOGGER.info("Legacy Colonies loaded");
     }
 
@@ -54,7 +66,13 @@ public class LegacyColonies
         final Set<Block> blocks = new HashSet<>(type.validBlocks);
         blocks.add(ModBlocks.COLONY_CAMPFIRE.get());
         blocks.add(ModBlocks.BUILDER_POST.get());
+        blocks.add(ModBlocks.INN.get());
         type.validBlocks = blocks;
+    }
+
+    private void onRegisterPayloads(final RegisterPayloadHandlersEvent event)
+    {
+        event.registrar("1").playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle);
     }
 
     private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)
@@ -62,6 +80,7 @@ public class LegacyColonies
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
+            event.accept(ModBlocks.INN_ITEM.get());
         }
     }
 }

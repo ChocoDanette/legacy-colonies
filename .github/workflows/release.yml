@@ -25,7 +25,7 @@ jobs:
         run: |
           version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
           if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
-            echo "Tag ${GITHUB_REF_NAME} does not match mod_version ${version} in gradle.properties"
+            echo "::error::The tag ${GITHUB_REF_NAME} does not match mod_version ${version} in gradle.properties. Use the tag v${version}, or run this workflow from the Actions tab."
             exit 1
           fi
           echo "VERSION=${version}" >> "$GITHUB_ENV"
@@ -41,4 +41,13 @@ jobs:
       - name: Publish the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "v${VERSION}" build/libs/legacycolonies-*.jar --target "${GITHUB_SHA}" --title "Legacy Colonies ${VERSION}" --notes-file release-notes.md
+        run: |
+          tag="v${VERSION}"
+          title="Legacy Colonies ${VERSION}"
+          # A release made by hand on github.com already exists: add the jar and notes to it.
+          if gh release view "${tag}" > /dev/null 2>&1; then
+            gh release upload "${tag}" build/libs/legacycolonies-*.jar --clobber
+            gh release edit "${tag}" --title "${title}" --notes-file release-notes.md
+          else
+            gh release create "${tag}" build/libs/legacycolonies-*.jar --target "${GITHUB_SHA}" --title "${title}" --notes-file release-notes.md
+          fi

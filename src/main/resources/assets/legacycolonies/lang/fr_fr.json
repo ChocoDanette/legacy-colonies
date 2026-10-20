@@ -1,8 +1,14 @@
 {
   "block.legacycolonies.builder_post": "Poste du bâtisseur",
   "block.legacycolonies.colony_campfire": "Feu de camp de colonie",
+  "block.legacycolonies.inn": "Auberge",
   "com.legacycolonies.building.builder_post": "Poste du bâtisseur",
   "com.legacycolonies.building.builder_post.desc": "Là où travaille le bâtisseur. Posé au-dessus du feu de camp de colonie.",
   "com.legacycolonies.building.colony_campfire": "Feu de camp de colonie",
-  "com.legacycolonies.building.colony_campfire.desc": "Fonde la colonie et en marque le centre."
+  "com.legacycolonies.building.colony_campfire.desc": "Fonde la colonie et en marque le centre.",
+  "com.legacycolonies.building.inn": "Auberge",
+  "com.legacycolonies.building.inn.desc": "Refuge des citoyens sans maison. Ne reçoit pas de visiteurs.",
+  "com.legacycolonies.fill.chosen": "Remblai du bâtisseur : %s",
+  "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
+  "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
 }
