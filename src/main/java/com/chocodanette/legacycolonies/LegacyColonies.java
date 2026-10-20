@@ -2,8 +2,10 @@ package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfirePlacementHandler;
+import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
+import com.minecolonies.api.eventbus.events.colony.buildings.BuildingRemovedModEvent;
 import com.minecolonies.api.tileentities.MinecoloniesTileEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -36,12 +38,14 @@ public class LegacyColonies
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(this::onCreativeTab);
         NeoForge.EVENT_BUS.register(CampfirePlacementHandler.class);
+        NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(LegacyColonies::addHutsToBuildingBlockEntity);
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
+        IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);
         LOGGER.info("Legacy Colonies loaded");
     }
 
