@@ -4,16 +4,19 @@ import com.minecolonies.api.blocks.AbstractBlockHut;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.colony.permissions.Action;
+import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
 import com.minecolonies.api.eventbus.events.colony.buildings.BuildingRemovedModEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /**
@@ -54,10 +57,29 @@ public final class MaterialChoiceHandler
                     return;
                 }
                 MaterialChoices.get(level).choose(event.getPos(), slot, material);
+                MaterialChoicesPayload.sendToLevel(level);
                 event.getEntity().displayClientMessage(
                   Component.translatable("com.legacycolonies.material.chosen." + slot.getId(), stack.getHoverName()), true);
             }
             return;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event)
+    {
+        if (event.getEntity() instanceof final ServerPlayer player)
+        {
+            MaterialChoicesPayload.sendTo(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(final PlayerEvent.PlayerChangedDimensionEvent event)
+    {
+        if (event.getEntity() instanceof final ServerPlayer player)
+        {
+            MaterialChoicesPayload.sendTo(player);
         }
     }
 
@@ -69,6 +91,7 @@ public final class MaterialChoiceHandler
         if (event.getBuilding().getColony().getWorld() instanceof final ServerLevel level)
         {
             MaterialChoices.get(level).clear(event.getBuilding().getPosition());
+            MaterialChoicesPayload.sendToLevel(level);
         }
     }
 }

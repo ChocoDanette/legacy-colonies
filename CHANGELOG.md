@@ -9,6 +9,9 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 - Materials per building: right click a hut with a TFC log or mud brick block to choose that material. When the
   builder receives the plan, every block of the ash wood family and of the entisol mud bricks is replaced by the same
   block of the chosen material, keeping its orientation. Without a choice the plan is built as drawn.
+- The resource list shown before building lists the chosen materials.
+- Daubed wattle (`tfc:wattle/unstained` and the stained ones) is requested as a wattle and a daub, plus the dye
+  for stained wattle, and the builder places the finished block.
 
 ## 0.3.0
 

@@ -38,6 +38,11 @@ public class MaterialChoices extends SavedData
         return choices.get(building);
     }
 
+    public Map<BlockPos, EnumMap<MaterialSlot, ResourceLocation>> getAll()
+    {
+        return choices;
+    }
+
     public void choose(final BlockPos building, final MaterialSlot slot, final ResourceLocation material)
     {
         choices.computeIfAbsent(building.immutable(), p -> new EnumMap<>(MaterialSlot.class)).put(slot, material);

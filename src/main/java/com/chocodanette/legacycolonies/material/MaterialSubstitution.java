@@ -6,6 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,6 +60,25 @@ public final class MaterialSubstitution
         {
             ((BlueprintAccessor) blueprint).legacycolonies$cacheReset(false);
         }
+    }
+
+    /**
+     * The item to request instead of the given plan item, for the resource list shown before building.
+     *
+     * @return the replacement stack, or the given stack if nothing is replaced.
+     */
+    public static ItemStack substitute(final ItemStack stack, final Map<MaterialSlot, ResourceLocation> chosen)
+    {
+        if (!(stack.getItem() instanceof final BlockItem blockItem))
+        {
+            return stack;
+        }
+        final BlockState replacement = substitute(blockItem.getBlock().defaultBlockState(), chosen);
+        if (replacement == null || replacement.getBlock().asItem() == Items.AIR)
+        {
+            return stack;
+        }
+        return new ItemStack(replacement.getBlock().asItem(), stack.getCount());
     }
 
     private static BlockState substitute(final BlockState state, final Map<MaterialSlot, ResourceLocation> chosen)
