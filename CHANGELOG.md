@@ -4,6 +4,14 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.6.0
+
+- Three new huts of the addon, without workers, to replace MineColonies' own: the forge (`legacycolonies:forge`), the
+  stable (`legacycolonies:stable`) and the warehouse (`legacycolonies:warehouse`). Each goes up to level 5. For now they
+  look like MineColonies' blacksmith, cowherd and warehouse huts.
+- The jar ships the forge's level 1 rules: a covered room, openings allowed, with a TFC forge and an anvil (stone or
+  metal, tag `#tfc:anvils`). The stable and the warehouse have no rules yet.
+
 ## 0.5.0
 
 - Huts are placed without MineColonies' "use the build tool" window. Right click a block with a hut to place it there,

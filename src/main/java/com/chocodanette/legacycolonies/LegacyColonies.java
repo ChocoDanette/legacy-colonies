@@ -72,6 +72,9 @@ public class LegacyColonies
         blocks.add(ModBlocks.COLONY_CAMPFIRE.get());
         blocks.add(ModBlocks.BUILDER_POST.get());
         blocks.add(ModBlocks.INN.get());
+        blocks.add(ModBlocks.FORGE.get());
+        blocks.add(ModBlocks.STABLE.get());
+        blocks.add(ModBlocks.WAREHOUSE.get());
         type.validBlocks = blocks;
     }
 
@@ -89,6 +92,9 @@ public class LegacyColonies
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
             event.accept(ModBlocks.INN_ITEM.get());
+            event.accept(ModBlocks.FORGE_ITEM.get());
+            event.accept(ModBlocks.STABLE_ITEM.get());
+            event.accept(ModBlocks.WAREHOUSE_ITEM.get());
         }
     }
 }

@@ -1,0 +1,14 @@
+{
+  "hut": "legacycolonies:forge",
+  "levels": {
+    "1": {
+      "closed": false,
+      "door": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["tfc:charcoal_forge"], "count": 1 },
+        { "blocks": ["#tfc:anvils"], "count": 1, "name": "enclume" }
+      ]
+    }
+  }
+}
