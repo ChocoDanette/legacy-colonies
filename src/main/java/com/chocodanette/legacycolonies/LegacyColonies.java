@@ -3,6 +3,7 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
+import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
 import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
@@ -61,6 +62,7 @@ public class LegacyColonies
         event.enqueueWork(() -> {
             PlacementHandlers.add(new DaubedWattlePlacementHandler());
             PlacementHandlers.add(new FirepitPlacementHandler());
+            PlacementHandlers.add(new CharcoalForgePlacementHandler());
             PlacementHandlers.add(new RockAnvilPlacementHandler());
         });
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);

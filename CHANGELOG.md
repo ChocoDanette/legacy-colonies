@@ -13,8 +13,11 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   metal, tag `#tfc:anvils`). The stable and the warehouse have no rules yet.
 - Rock bricks are a third material per building: plans use andesite bricks (`tfc:rock/bricks/andesite`, its stairs,
   slabs and walls). Right click a hut with a TFC rock brick block to use that rock instead.
-- The builder can place TFC firepits and stone anvils from a plan. A firepit takes a log of the building's wood,
-  3 sticks and 3 straw, and is placed unlit; a stone anvil takes a raw block of its rock.
+- The builder can place TFC firepits, charcoal forges and stone anvils from a plan. A firepit takes a log of the
+  building's wood, 3 sticks and 3 straw, and is placed unlit; a forge takes 7 charcoal and is placed cold; a stone anvil
+  takes a raw block of its rock.
+- The rock of stone anvils is a fourth material per building: plans use dacite. Right click a hut with a raw block of an
+  igneous rock (the only ones TFC makes anvils of) to use that rock instead.
 
 ## 0.5.0
 

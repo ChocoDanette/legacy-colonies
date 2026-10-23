@@ -32,6 +32,7 @@
   "com.legacycolonies.confirm.too_big": "La pièce autour de la hutte est trop grande (plus de %s blocs d'air) ou n'est pas fermée.",
   "com.legacycolonies.confirm.work_order": "Un chantier est en cours pour cette hutte : annule-le ou attends qu'il soit fini.",
   "com.legacycolonies.fill.chosen": "Remblai du bâtisseur : %s",
+  "com.legacycolonies.material.chosen.anvil_rock": "Enclumes en pierre de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.rock_brick": "Briques de pierre de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
