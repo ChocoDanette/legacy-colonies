@@ -4,9 +4,11 @@
   "package": "com.chocodanette.legacycolonies.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractBuildingMixin",
     "AbstractEntityAIBasicMixin",
     "AbstractWorkOrderMixin",
-    "BlueprintAccessor"
+    "BlueprintAccessor",
+    "WorkOrderBuildingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

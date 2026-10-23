@@ -1,5 +1,6 @@
 package com.chocodanette.legacycolonies;
 
+import com.chocodanette.legacycolonies.colony.BuildModeHandler;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
@@ -8,6 +9,7 @@ import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
 import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
+import com.chocodanette.legacycolonies.network.BuildModesPayload;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
 import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
@@ -51,6 +53,7 @@ public class LegacyColonies
         modBus.addListener(this::onRegisterPayloads);
         NeoForge.EVENT_BUS.register(HutPlacementHandler.class);
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
+        NeoForge.EVENT_BUS.register(BuildModeHandler.class);
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.addListener(BuildingRulesPayload::onDatapackSync);
@@ -67,6 +70,7 @@ public class LegacyColonies
         });
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);
+        IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, BuildModeHandler::onBuildingRemoved);
         LOGGER.info("Legacy Colonies loaded");
     }
 
@@ -90,6 +94,7 @@ public class LegacyColonies
     {
         event.registrar("1")
           .playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle)
+          .playToClient(BuildModesPayload.TYPE, BuildModesPayload.STREAM_CODEC, BuildModesPayload::handle)
           .playToClient(BuildingRulesPayload.TYPE, BuildingRulesPayload.STREAM_CODEC, BuildingRulesPayload::handle)
           .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle);
     }

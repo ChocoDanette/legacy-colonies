@@ -1,5 +1,8 @@
 package com.chocodanette.legacycolonies.validation;
 
+import com.chocodanette.legacycolonies.colony.BuildMode;
+import com.chocodanette.legacycolonies.colony.BuildModeHandler;
+import com.chocodanette.legacycolonies.colony.BuildModes;
 import com.minecolonies.api.advancements.AdvancementTriggers;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
@@ -52,6 +55,12 @@ public final class BuildingValidator
         if (!colony.getPermissions().hasPermission(player, Action.MANAGE_HUTS))
         {
             fail(player, Component.translatable(KEY + "no_permission"));
+            return;
+        }
+
+        if (BuildModes.get(level).getMode(hutPos) == BuildMode.BUILDER)
+        {
+            fail(player, Component.translatable(KEY + "builder_built"));
             return;
         }
 
@@ -124,6 +133,7 @@ public final class BuildingValidator
         }
 
         upgrade(colony, building, level, room, blocks, target);
+        BuildModeHandler.choose(level, hutPos, BuildMode.HAND);
         player.sendSystemMessage(Component.translatable(KEY + "success", Component.translatable(building.getBuildingDisplayName()), target).withStyle(ChatFormatting.GREEN));
     }
 

@@ -5,6 +5,22 @@
       "closed": false,
       "door": false,
       "light": false
+    },
+    "2": {
+      "closed": false,
+      "door": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 1, "name": "lit" }
+      ]
+    },
+    "3": {
+      "closed": false,
+      "door": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 2, "name": "lit" }
+      ]
     }
   }
 }

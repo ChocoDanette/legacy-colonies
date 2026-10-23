@@ -4,6 +4,16 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.6.1
+
+- Who builds a hut is chosen once. Giving the hut to the builder (build or upgrade from its window) makes every level
+  come from the builder and its plans: the "Confirm building" button no longer shows for that hut. Confirming a
+  building by hand makes every level go through the rules: the build button no longer shows (the confirm button takes
+  its place), and the builder refuses to build, upgrade or repair the hut. Breaking the hut forgets the choice. Huts
+  built before this version have no choice yet.
+- The jar ships the inn's levels 2 and 3: a covered room, openings allowed, with 1 bed for level 2 and 2 beds for
+  level 3 (any bed, TFC thatch beds included).
+
 ## 0.6.0
 
 - Three new huts of the addon, without workers, to replace MineColonies' own: the forge (`legacycolonies:forge`), the

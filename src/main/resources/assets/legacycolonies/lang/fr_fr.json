@@ -17,6 +17,7 @@
   "com.legacycolonies.building.stable.desc": "Abri pour les animaux de toute sorte. Sans ouvrier.",
   "com.legacycolonies.building.warehouse": "Entrepôt",
   "com.legacycolonies.building.warehouse.desc": "Coffres et tonneaux de la colonie. Sans livreur.",
+  "com.legacycolonies.confirm.builder_built": "Cette hutte a été confiée au bâtisseur : ses niveaux viennent du bâtisseur, pas de « Confirmer le bâtiment ».",
   "com.legacycolonies.confirm.button": "Confirmer le bâtiment",
   "com.legacycolonies.confirm.failed": "%s ne peut pas passer au niveau %s :",
   "com.legacycolonies.confirm.max_level": "Cette hutte est déjà à son niveau maximum.",
@@ -35,5 +36,6 @@
   "com.legacycolonies.material.chosen.anvil_rock": "Enclumes en pierre de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.rock_brick": "Briques de pierre de ce bâtiment : %s",
-  "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
+  "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s",
+  "com.legacycolonies.mode.hand_built": "Cette hutte a été construite à la main : le bâtisseur ne la construit, ne l'améliore ni ne la répare. Utilise « Confirmer le bâtiment » pour son niveau suivant."
 }

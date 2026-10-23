@@ -1,5 +1,7 @@
 package com.chocodanette.legacycolonies.mixin.client;
 
+import com.chocodanette.legacycolonies.colony.BuildMode;
+import com.chocodanette.legacycolonies.colony.ClientBuildModes;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
 import com.chocodanette.legacycolonies.validation.ClientBuildingRules;
 import com.ldtteam.blockui.Pane;
@@ -21,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Adds a "confirm building" button next to the hut's build button when the hut's next level can be built by hand.
+ * Once the hut has a build mode, only its button stays: a hut given to the builder loses "confirm building", a hut built
+ * by hand loses the build button (and takes its place).
  */
 @Mixin(value = AbstractBuildingMainWindow.class, remap = false)
 public abstract class AbstractBuildingMainWindowMixin
@@ -34,8 +38,18 @@ public abstract class AbstractBuildingMainWindowMixin
     @Inject(method = "<init>", at = @At("TAIL"))
     private void legacycolonies$addConfirmButton(final IBuildingView buildingView, final ResourceLocation resource, final CallbackInfo ci)
     {
+        if (buttonBuild == null || buttonBuild.getParent() == null)
+        {
+            return;
+        }
+        final BuildMode mode = ClientBuildModes.getMode(buildingView.getPosition());
+        if (mode == BuildMode.HAND)
+        {
+            buttonBuild.setVisible(false);
+        }
+
         final int nextLevel = buildingView.getBuildingLevel() + 1;
-        if (buttonBuild == null || buttonBuild.getParent() == null
+        if (mode == BuildMode.BUILDER
               || nextLevel > buildingView.getBuildingMaxLevel()
               || !ClientBuildingRules.canConfirm(buildingView.getBuildingType().getRegistryName(), nextLevel))
         {
@@ -51,7 +65,7 @@ public abstract class AbstractBuildingMainWindowMixin
         confirm.setTextRenderBox(buttonBuild.getWidth(), buttonBuild.getHeight());
         confirm.setColors(0);
         confirm.setText(Component.translatable("com.legacycolonies.confirm.button"));
-        confirm.setPosition(buttonBuild.getX(), freeRow(parent, buttonBuild));
+        confirm.setPosition(buttonBuild.getX(), mode == BuildMode.HAND ? buttonBuild.getY() : freeRow(parent, buttonBuild));
         parent.addChild(confirm);
 
         ((AbstractWindowSkeleton) (Object) this).registerButton(CONFIRM_ID, () -> {
