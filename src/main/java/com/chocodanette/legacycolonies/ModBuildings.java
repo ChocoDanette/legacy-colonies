@@ -2,7 +2,10 @@ package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
+import com.chocodanette.legacycolonies.block.BlockForge;
 import com.chocodanette.legacycolonies.block.BlockInn;
+import com.chocodanette.legacycolonies.block.BlockStable;
+import com.chocodanette.legacycolonies.block.BlockWarehouse;
 import com.chocodanette.legacycolonies.building.BuildingBuilderPost;
 import com.chocodanette.legacycolonies.building.BuildingColonyCampfire;
 import com.chocodanette.legacycolonies.building.module.InnLivingModule;
@@ -70,6 +73,39 @@ public final class ModBuildings
       .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockInn.NAME))
       .addBuildingModuleProducer(INN_LIVING)
       .addBuildingModuleProducer(BED)
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * The forge, where the player works metal (TFC forge and anvil). Unlike MineColonies' blacksmith, it has no worker.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> FORGE = BUILDINGS.register(BlockForge.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.FORGE.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockForge.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockForge.NAME))
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * The stable: a shelter for any animal. No worker: citizens do not tend animals.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> STABLE = BUILDINGS.register(BlockStable.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.STABLE.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockStable.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockStable.NAME))
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * The warehouse: the colony's chests and barrels. Unlike MineColonies' warehouse, it has no couriers.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> WAREHOUSE = BUILDINGS.register(BlockWarehouse.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.WAREHOUSE.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockWarehouse.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockWarehouse.NAME))
       .addBuildingModuleProducer(STATS_MODULE)
       .createBuildingEntry());
 

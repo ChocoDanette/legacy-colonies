@@ -3,7 +3,10 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
+import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
+import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
+import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
@@ -56,7 +59,12 @@ public class LegacyColonies
     private void onCommonSetup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(LegacyColonies::addHutsToBuildingBlockEntity);
-        event.enqueueWork(() -> PlacementHandlers.add(new DaubedWattlePlacementHandler()));
+        event.enqueueWork(() -> {
+            PlacementHandlers.add(new DaubedWattlePlacementHandler());
+            PlacementHandlers.add(new FirepitPlacementHandler());
+            PlacementHandlers.add(new CharcoalForgePlacementHandler());
+            PlacementHandlers.add(new RockAnvilPlacementHandler());
+        });
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);
         LOGGER.info("Legacy Colonies loaded");
@@ -72,6 +80,9 @@ public class LegacyColonies
         blocks.add(ModBlocks.COLONY_CAMPFIRE.get());
         blocks.add(ModBlocks.BUILDER_POST.get());
         blocks.add(ModBlocks.INN.get());
+        blocks.add(ModBlocks.FORGE.get());
+        blocks.add(ModBlocks.STABLE.get());
+        blocks.add(ModBlocks.WAREHOUSE.get());
         type.validBlocks = blocks;
     }
 
@@ -89,6 +100,9 @@ public class LegacyColonies
         {
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
             event.accept(ModBlocks.INN_ITEM.get());
+            event.accept(ModBlocks.FORGE_ITEM.get());
+            event.accept(ModBlocks.STABLE_ITEM.get());
+            event.accept(ModBlocks.WAREHOUSE_ITEM.get());
         }
     }
 }
