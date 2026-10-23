@@ -4,6 +4,8 @@ import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
+import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
+import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
@@ -56,7 +58,11 @@ public class LegacyColonies
     private void onCommonSetup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(LegacyColonies::addHutsToBuildingBlockEntity);
-        event.enqueueWork(() -> PlacementHandlers.add(new DaubedWattlePlacementHandler()));
+        event.enqueueWork(() -> {
+            PlacementHandlers.add(new DaubedWattlePlacementHandler());
+            PlacementHandlers.add(new FirepitPlacementHandler());
+            PlacementHandlers.add(new RockAnvilPlacementHandler());
+        });
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);
         LOGGER.info("Legacy Colonies loaded");
