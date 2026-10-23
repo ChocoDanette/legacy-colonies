@@ -33,5 +33,6 @@
   "com.legacycolonies.confirm.work_order": "This hut has a work order in progress: cancel it or wait until it is done.",
   "com.legacycolonies.fill.chosen": "Builder's fill block: %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mud bricks for this building: %s",
+  "com.legacycolonies.material.chosen.rock_brick": "Rock bricks for this building: %s",
   "com.legacycolonies.material.chosen.wood": "Wood for this building: %s"
 }

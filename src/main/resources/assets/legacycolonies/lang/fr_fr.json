@@ -33,5 +33,6 @@
   "com.legacycolonies.confirm.work_order": "Un chantier est en cours pour cette hutte : annule-le ou attends qu'il soit fini.",
   "com.legacycolonies.fill.chosen": "Remblai du bâtisseur : %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mudbricks de ce bâtiment : %s",
+  "com.legacycolonies.material.chosen.rock_brick": "Briques de pierre de ce bâtiment : %s",
   "com.legacycolonies.material.chosen.wood": "Bois de ce bâtiment : %s"
 }

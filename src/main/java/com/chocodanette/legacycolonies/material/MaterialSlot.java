@@ -12,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
 public enum MaterialSlot
 {
     WOOD("wood", "wood/", "wood/log/", "ash"),
-    MUD_BRICK("mud_brick", "mud_bricks/", "mud_bricks/", "entisol");
+    MUD_BRICK("mud_brick", "mud_bricks/", "mud_bricks/", "entisol"),
+    ROCK_BRICK("rock_brick", "rock/bricks/", "rock/bricks/", "andesite");
 
     private final String id;
     private final String familyPrefix;
@@ -33,7 +34,7 @@ public enum MaterialSlot
     }
 
     /**
-     * The material named by a block the player holds to choose it (a log for wood, a mud brick block for mud bricks).
+     * The material named by a block the player holds to choose it (a log for wood, a mud brick block for mud bricks, a rock brick block for rock bricks).
      *
      * @return the chosen material, or null if the block does not choose this slot.
      */

@@ -11,6 +11,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   look like MineColonies' blacksmith, cowherd and warehouse huts.
 - The jar ships the forge's level 1 rules: a covered room, openings allowed, with a TFC forge and an anvil (stone or
   metal, tag `#tfc:anvils`). The stable and the warehouse have no rules yet.
+- Rock bricks are a third material per building: plans use andesite bricks (`tfc:rock/bricks/andesite`, its stairs,
+  slabs and walls). Right click a hut with a TFC rock brick block to use that rock instead.
 
 ## 0.5.0
 
