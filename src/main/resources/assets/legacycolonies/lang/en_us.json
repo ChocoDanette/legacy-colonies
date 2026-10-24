@@ -17,6 +17,7 @@
   "com.legacycolonies.building.stable.desc": "Shelter for animals of any kind. No worker.",
   "com.legacycolonies.building.warehouse": "Warehouse",
   "com.legacycolonies.building.warehouse.desc": "Chests and barrels of the colony. No courier.",
+  "com.legacycolonies.confirm.builder_built": "This hut was given to the builder: its levels come from the builder, not from \"Confirm building\".",
   "com.legacycolonies.confirm.button": "Confirm building",
   "com.legacycolonies.confirm.failed": "%s cannot reach level %s:",
   "com.legacycolonies.confirm.max_level": "This hut is already at its highest level.",
@@ -35,5 +36,6 @@
   "com.legacycolonies.material.chosen.anvil_rock": "Stone anvils of this building: %s",
   "com.legacycolonies.material.chosen.mud_brick": "Mud bricks for this building: %s",
   "com.legacycolonies.material.chosen.rock_brick": "Rock bricks for this building: %s",
-  "com.legacycolonies.material.chosen.wood": "Wood for this building: %s"
+  "com.legacycolonies.material.chosen.wood": "Wood for this building: %s",
+  "com.legacycolonies.mode.hand_built": "This hut was built by hand: the builder does not build, upgrade or repair it. Use \"Confirm building\" for its next level."
 }
