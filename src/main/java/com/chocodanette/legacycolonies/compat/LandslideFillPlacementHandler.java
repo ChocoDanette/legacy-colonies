@@ -3,9 +3,11 @@ package com.chocodanette.legacycolonies.compat;
 import com.chocodanette.legacycolonies.LegacyColonies;
 import com.ldtteam.structurize.placement.IPlacementContext;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
+import com.ldtteam.structurize.placement.structure.IStructureHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * The builder fills solid placeholders with the colony's fill block, TFC dirt. Dirt at the edge of a drop slides away
  * (TFC landslides) once the builder has moved on, leaving a hole in the foundation. Here the builder keeps filling:
  * while the block it placed would slide, the slide is played out at once (the block comes to rest lower down) and the
- * placeholder is filled again, until the fill stays in place.
+ * placeholder is filled again with a block from its stock, until the fill stays in place.
  */
 public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubstitutionPlacementHandler
 {
@@ -74,23 +77,34 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
         }
 
         final BlockState fill = level.getBlockState(pos);
-        if (!canLandslide(fill))
+        if (!canLandslide(fill) || !(placementContext instanceof final IStructureHandler builder))
         {
             return result;
         }
-        for (int i = 0; i < MAX_FILLS && slide(level, pos, fill); i++)
+        for (int i = 0; i < MAX_FILLS && landslidePos(level, pos, fill) != null; i++)
         {
+            // Each new fill comes from the builder's stock; without one, TFC lets the last fill slide later.
+            final List<ItemStack> items = getRequiredItems(world, pos, blockState, tileEntityData, placementContext);
+            // The builder takes the first fill only once this placement returns: it must still be in the stock.
+            final List<ItemStack> withFirst = items.stream().map(stack -> stack.copyWithCount(stack.getCount() * 2)).toList();
+            if (!builder.isCreative() && !builder.hasRequiredItems(withFirst))
+            {
+                break;
+            }
+            slide(level, pos, fill);
+            if (!builder.isCreative())
+            {
+                builder.consume(items);
+            }
             level.setBlock(pos, fill, Block.UPDATE_ALL);
         }
         return result;
     }
 
     /**
-     * Plays out the slide of the fill at {@code pos}, as TFC would a moment later.
-     *
-     * @return false when the fill stays in place; true when it slid away and {@code pos} is empty again.
+     * Plays out the slide of the fill at {@code pos}, as TFC would a moment later: {@code pos} is empty afterwards.
      */
-    private static boolean slide(final ServerLevel level, final BlockPos pos, final BlockState fill)
+    private static void slide(final ServerLevel level, final BlockPos pos, final BlockState fill)
     {
         BlockPos current = pos;
         for (int step = 0; step < MAX_SLIDE_STEPS; step++)
@@ -104,7 +118,6 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
             level.setBlock(next, fill, Block.UPDATE_ALL);
             current = next;
         }
-        return !current.equals(pos);
     }
 
     private static boolean canLandslide(final BlockState state)

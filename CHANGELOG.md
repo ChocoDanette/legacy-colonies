@@ -17,8 +17,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   foot of the bed; both halves are placed at once, and breaking the bed gives the thatch and the hide back.
 - The builder keeps filling while its fill slides. TFC dirt at the edge of a drop slides away (TFC landslides) after the
   builder has moved on, leaving a hole in the foundation. Now the slide is played out as soon as the fill is placed (the
-  block comes to rest lower down) and the spot is filled again, up to 16 times, until the fill stays in place. The
-  extra fill blocks are not taken from the builder's stock.
+  block comes to rest lower down) and the spot is filled again, up to 16 times, until the fill stays in place. Each
+  extra fill block comes from the builder's stock; when it runs out, the last fill is left to slide.
 
 ## 0.6.0
 
