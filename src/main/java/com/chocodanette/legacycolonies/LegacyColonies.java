@@ -8,6 +8,7 @@ import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
 import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
+import com.chocodanette.legacycolonies.compat.ThatchBedPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.chocodanette.legacycolonies.network.BuildModesPayload;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
@@ -67,6 +68,8 @@ public class LegacyColonies
             PlacementHandlers.add(new FirepitPlacementHandler());
             PlacementHandlers.add(new CharcoalForgePlacementHandler());
             PlacementHandlers.add(new RockAnvilPlacementHandler());
+            // Before Structurize's own bed handler, which would ask for a thatch bed item.
+            PlacementHandlers.add(new ThatchBedPlacementHandler(), PlacementHandlers.BedPlacementHandler.class, PlacementHandlers.AddType.BEFORE);
         });
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(ColonyCreatedModEvent.class, BuilderPostHandler::onColonyCreated);
         IMinecoloniesAPI.getInstance().getEventBus().subscribe(BuildingRemovedModEvent.class, MaterialChoiceHandler::onBuildingRemoved);

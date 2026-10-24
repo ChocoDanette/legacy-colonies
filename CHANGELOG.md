@@ -13,6 +13,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   built before this version have no choice yet.
 - The jar ships the inn's levels 2 and 3: a covered room, openings allowed, with 1 bed for level 2 and 2 beds for
   level 3 (any bed, TFC thatch beds included).
+- The builder can place TFC thatch beds from a plan. A thatch bed takes 2 thatch and 1 large raw hide, asked at the
+  foot of the bed; both halves are placed at once, and breaking the bed gives the thatch and the hide back.
 
 ## 0.6.0
 
