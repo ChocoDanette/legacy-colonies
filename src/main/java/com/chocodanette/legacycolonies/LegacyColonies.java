@@ -7,6 +7,7 @@ import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
 import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
 import com.chocodanette.legacycolonies.compat.DaubedWattlePlacementHandler;
 import com.chocodanette.legacycolonies.compat.FirepitPlacementHandler;
+import com.chocodanette.legacycolonies.compat.LandslideFillPlacementHandler;
 import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
 import com.chocodanette.legacycolonies.compat.ThatchBedPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
@@ -68,6 +69,7 @@ public class LegacyColonies
             PlacementHandlers.add(new FirepitPlacementHandler());
             PlacementHandlers.add(new CharcoalForgePlacementHandler());
             PlacementHandlers.add(new RockAnvilPlacementHandler());
+            PlacementHandlers.add(new LandslideFillPlacementHandler(), PlacementHandlers.SolidSubstitutionPlacementHandler.class, PlacementHandlers.AddType.REPLACE);
             // Before Structurize's own bed handler, which would ask for a thatch bed item.
             PlacementHandlers.add(new ThatchBedPlacementHandler(), PlacementHandlers.BedPlacementHandler.class, PlacementHandlers.AddType.BEFORE);
         });

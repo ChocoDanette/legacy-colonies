@@ -15,6 +15,10 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   level 3 (any bed, TFC thatch beds included).
 - The builder can place TFC thatch beds from a plan. A thatch bed takes 2 thatch and 1 large raw hide, asked at the
   foot of the bed; both halves are placed at once, and breaking the bed gives the thatch and the hide back.
+- The builder keeps filling while its fill slides. TFC dirt at the edge of a drop slides away (TFC landslides) after the
+  builder has moved on, leaving a hole in the foundation. Now the slide is played out as soon as the fill is placed (the
+  block comes to rest lower down) and the spot is filled again, up to 16 times, until the fill stays in place. The
+  extra fill blocks are not taken from the builder's stock.
 
 ## 0.6.0
 
