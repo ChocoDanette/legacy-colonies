@@ -5,9 +5,11 @@ import com.ldtteam.structurize.placement.IPlacementContext;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
 import com.ldtteam.structurize.placement.structure.IStructureHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,16 +45,24 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
     private static final Method CAN_LANDSLIDE;
     @Nullable
     private static final Method GET_LANDSLIDE_POS;
+    /**
+     * {@code TFCFallingBlockEntity.canFallThrough(BlockGetter, BlockPos, Direction, BlockState)}.
+     */
+    @Nullable
+    private static final Method CAN_FALL_THROUGH;
 
     static
     {
         Method canLandslide = null;
         Method getLandslidePos = null;
+        Method canFallThrough = null;
         try
         {
             final Class<?> recipe = Class.forName("net.dries007.tfc.common.recipes.LandslideRecipe");
             canLandslide = recipe.getMethod("canLandslide", BlockState.class);
             getLandslidePos = recipe.getMethod("getLandslidePos", Level.class, BlockPos.class, BlockState.class);
+            canFallThrough = Class.forName("net.dries007.tfc.common.entities.misc.TFCFallingBlockEntity")
+              .getMethod("canFallThrough", BlockGetter.class, BlockPos.class, Direction.class, BlockState.class);
         }
         catch (final ReflectiveOperationException e)
         {
@@ -60,6 +70,7 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
         }
         CAN_LANDSLIDE = canLandslide;
         GET_LANDSLIDE_POS = getLandslidePos;
+        CAN_FALL_THROUGH = canFallThrough;
     }
 
     @Override
@@ -71,7 +82,7 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
       @NotNull final IPlacementContext placementContext)
     {
         final ActionProcessingResult result = super.handle(world, pos, blockState, tileEntityData, placementContext);
-        if (result != ActionProcessingResult.SUCCESS || !(world instanceof final ServerLevel level) || GET_LANDSLIDE_POS == null)
+        if (result != ActionProcessingResult.SUCCESS || !(world instanceof final ServerLevel level) || GET_LANDSLIDE_POS == null || CAN_FALL_THROUGH == null)
         {
             return result;
         }
@@ -91,7 +102,10 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
             {
                 break;
             }
-            slide(level, pos, fill);
+            if (!slide(level, pos, fill))
+            {
+                break;
+            }
             if (!builder.isCreative())
             {
                 builder.consume(items);
@@ -102,22 +116,35 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
     }
 
     /**
-     * Plays out the slide of the fill at {@code pos}, as TFC would a moment later: {@code pos} is empty afterwards.
+     * Plays out the slide of the fill at {@code pos}, as TFC would a moment later. TFC gives the position the block
+     * falls from: the block itself when nothing holds it from below, or a free side it slides to first.
+     *
+     * @return true when the fill moved and {@code pos} is empty again.
      */
-    private static void slide(final ServerLevel level, final BlockPos pos, final BlockState fill)
+    private static boolean slide(final ServerLevel level, final BlockPos pos, final BlockState fill)
     {
         BlockPos current = pos;
         for (int step = 0; step < MAX_SLIDE_STEPS; step++)
         {
-            final BlockPos next = landslidePos(level, current, fill);
-            if (next == null)
+            final BlockPos from = landslidePos(level, current, fill);
+            if (from == null)
+            {
+                break;
+            }
+            BlockPos landing = from;
+            while (landing.getY() > level.getMinBuildHeight() && canFallThrough(level, landing.below(), fill))
+            {
+                landing = landing.below();
+            }
+            if (landing.equals(current))
             {
                 break;
             }
             level.removeBlock(current, false);
-            level.setBlock(next, fill, Block.UPDATE_ALL);
-            current = next;
+            level.setBlock(landing, fill, Block.UPDATE_ALL);
+            current = landing;
         }
+        return !current.equals(pos);
     }
 
     private static boolean canLandslide(final BlockState state)
@@ -125,6 +152,18 @@ public class LandslideFillPlacementHandler extends PlacementHandlers.SolidSubsti
         try
         {
             return CAN_LANDSLIDE != null && (boolean) CAN_LANDSLIDE.invoke(null, state);
+        }
+        catch (final ReflectiveOperationException e)
+        {
+            return false;
+        }
+    }
+
+    private static boolean canFallThrough(final Level level, final BlockPos pos, final BlockState state)
+    {
+        try
+        {
+            return (boolean) CAN_FALL_THROUGH.invoke(null, level, pos, Direction.DOWN, state);
         }
         catch (final ReflectiveOperationException e)
         {
