@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * New citizens come from outside: one every few game days, at the edge of the colony, while the colony has room for
- * them in its era (see {@link ColonyNeeds#allowedCitizens}). They walk in on their own. MineColonies still brings the
+ * them in its era (see {@link ColonyNeeds#allowedCitizens}) and, from the iron age, food for them (see {@link ColonyRations}). They walk in on their own. MineColonies still brings the
  * first citizen, also from the edge (see {@code CitizenManagerMixin}).
  */
 public final class ColonyArrivals
@@ -82,7 +82,7 @@ public final class ColonyArrivals
 
         final ColonyEras data = ColonyEras.get(level);
         final int allowed = ColonyNeeds.allowedCitizens(colony);
-        if (count >= allowed)
+        if (count >= allowed || ColonyRations.unfed(colony) > 0)
         {
             data.setNextArrival(colony.getID(), 0);
             return;
@@ -98,6 +98,11 @@ public final class ColonyArrivals
         }
         if (now < next)
         {
+            return;
+        }
+        if (!ColonyRations.canFeedNewcomer(colony))
+        {
+            // Not enough food in the granaries for one more: the citizen waits.
             return;
         }
 

@@ -12,7 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 /**
- * {@code /legacycolonies needs}: era, citizens, beds and houses of the colony the player stands in (or owns), and when the
+ * {@code /legacycolonies needs}: era, citizens, beds, houses and food of the colony the player stands in (or owns), and when the
  * next citizen arrives.
  */
 public final class NeedsCommand
@@ -61,6 +61,17 @@ public final class NeedsCommand
         {
             source.sendSystemMessage(Component.translatable(KEY + "houses", ColonyNeeds.count(colony, ModBuildings.HOUSE.get(), true, null), houses.maxCount()));
         }
+        if (rules.food())
+        {
+            final int stock = ColonyRations.stock(colony);
+            source.sendSystemMessage(stock < 0
+              ? Component.translatable(KEY + "food_unloaded")
+              : Component.translatable(KEY + "food", stock, ColonyNeeds.count(colony, ModBuildings.GRANARY.get(), true, null)));
+        }
+        else
+        {
+            source.sendSystemMessage(Component.translatable(KEY + "no_food_needed"));
+        }
 
         final long seconds = ColonyArrivals.secondsToNextArrival(colony);
         if (citizens >= rules.maxCitizens())
@@ -70,6 +81,14 @@ public final class NeedsCommand
         else if (citizens >= allowed)
         {
             source.sendSystemMessage(Component.translatable(KEY + "need_beds"));
+        }
+        else if (ColonyRations.unfed(colony) > 0)
+        {
+            source.sendSystemMessage(Component.translatable(KEY + "unfed", ColonyRations.unfed(colony)));
+        }
+        else if (!ColonyRations.canFeedNewcomer(colony))
+        {
+            source.sendSystemMessage(Component.translatable(KEY + "need_food"));
         }
         else if (seconds >= 0)
         {

@@ -3,6 +3,7 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
 import com.chocodanette.legacycolonies.block.BlockForge;
+import com.chocodanette.legacycolonies.block.BlockGranary;
 import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
 import com.chocodanette.legacycolonies.block.BlockStable;
@@ -94,6 +95,17 @@ public final class ModBuildings
       .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockHouse.NAME))
       .addBuildingModuleProducer(HOUSE_LIVING)
       .addBuildingModuleProducer(BED)
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * The granary: its chests and barrels hold the food the citizens take each day, from the iron age. No worker.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> GRANARY = BUILDINGS.register(BlockGranary.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.GRANARY.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockGranary.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockGranary.NAME))
       .addBuildingModuleProducer(STATS_MODULE)
       .createBuildingEntry());
 

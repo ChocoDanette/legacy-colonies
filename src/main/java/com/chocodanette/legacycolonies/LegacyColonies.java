@@ -13,6 +13,7 @@ import com.chocodanette.legacycolonies.compat.RockAnvilPlacementHandler;
 import com.chocodanette.legacycolonies.compat.ThatchBedPlacementHandler;
 import com.chocodanette.legacycolonies.material.MaterialChoiceHandler;
 import com.chocodanette.legacycolonies.needs.ColonyArrivals;
+import com.chocodanette.legacycolonies.needs.ColonyRations;
 import com.chocodanette.legacycolonies.needs.EraRulesManager;
 import com.chocodanette.legacycolonies.needs.NeedsCommand;
 import com.chocodanette.legacycolonies.network.BuildModesPayload;
@@ -64,6 +65,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
         NeoForge.EVENT_BUS.register(ColonyArrivals.class);
+        NeoForge.EVENT_BUS.register(ColonyRations.class);
         NeoForge.EVENT_BUS.register(NeedsCommand.class);
         NeoForge.EVENT_BUS.addListener(BuildingRulesPayload::onDatapackSync);
     }
@@ -102,6 +104,7 @@ public class LegacyColonies
         blocks.add(ModBlocks.BUILDER_POST.get());
         blocks.add(ModBlocks.INN.get());
         blocks.add(ModBlocks.HOUSE.get());
+        blocks.add(ModBlocks.GRANARY.get());
         blocks.add(ModBlocks.FORGE.get());
         blocks.add(ModBlocks.STABLE.get());
         blocks.add(ModBlocks.WAREHOUSE.get());
@@ -124,6 +127,7 @@ public class LegacyColonies
             event.accept(ModBlocks.COLONY_CAMPFIRE_ITEM.get());
             event.accept(ModBlocks.INN_ITEM.get());
             event.accept(ModBlocks.HOUSE_ITEM.get());
+            event.accept(ModBlocks.GRANARY_ITEM.get());
             event.accept(ModBlocks.FORGE_ITEM.get());
             event.accept(ModBlocks.STABLE_ITEM.get());
             event.accept(ModBlocks.WAREHOUSE_ITEM.get());

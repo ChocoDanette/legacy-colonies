@@ -3,7 +3,14 @@
   "max_citizens": 1,
   "beds": false,
   "huts": {
-    "legacycolonies:inn": { "max_level": 1 },
-    "legacycolonies:house": { "max_count": 0 }
+    "legacycolonies:inn": {
+      "max_level": 1
+    },
+    "legacycolonies:house": {
+      "max_count": 0
+    },
+    "legacycolonies:granary": {
+      "max_count": 0
+    }
   }
 }

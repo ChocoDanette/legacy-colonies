@@ -3,6 +3,7 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
 import com.chocodanette.legacycolonies.block.BlockForge;
+import com.chocodanette.legacycolonies.block.BlockGranary;
 import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
 import com.chocodanette.legacycolonies.block.BlockStable;
@@ -25,6 +26,7 @@ public final class ModBlocks
     public static final DeferredBlock<BlockBuilderPost>    BUILDER_POST    = BLOCKS.register(BlockBuilderPost.NAME, BlockBuilderPost::new);
     public static final DeferredBlock<BlockInn>            INN             = BLOCKS.register(BlockInn.NAME, BlockInn::new);
     public static final DeferredBlock<BlockHouse>          HOUSE           = BLOCKS.register(BlockHouse.NAME, BlockHouse::new);
+    public static final DeferredBlock<BlockGranary>        GRANARY         = BLOCKS.register(BlockGranary.NAME, BlockGranary::new);
     public static final DeferredBlock<BlockForge>          FORGE           = BLOCKS.register(BlockForge.NAME, BlockForge::new);
     public static final DeferredBlock<BlockStable>         STABLE          = BLOCKS.register(BlockStable.NAME, BlockStable::new);
     public static final DeferredBlock<BlockWarehouse>      WAREHOUSE       = BLOCKS.register(BlockWarehouse.NAME, BlockWarehouse::new);
@@ -35,6 +37,8 @@ public final class ModBlocks
       ITEMS.register(BlockInn.NAME, () -> new ItemBlockHut(INN.get(), new Item.Properties()));
     public static final DeferredItem<Item> HOUSE_ITEM =
       ITEMS.register(BlockHouse.NAME, () -> new ItemBlockHut(HOUSE.get(), new Item.Properties()));
+    public static final DeferredItem<Item> GRANARY_ITEM =
+      ITEMS.register(BlockGranary.NAME, () -> new ItemBlockHut(GRANARY.get(), new Item.Properties()));
     public static final DeferredItem<Item> FORGE_ITEM =
       ITEMS.register(BlockForge.NAME, () -> new ItemBlockHut(FORGE.get(), new Item.Properties()));
     public static final DeferredItem<Item> STABLE_ITEM =
