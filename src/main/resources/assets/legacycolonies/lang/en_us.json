@@ -56,7 +56,7 @@
   "com.legacycolonies.needs.level_too_high": "%s level %s is out of reach in %s (level %s at most).",
   "com.legacycolonies.needs.status.beds": "Beds: %s",
   "com.legacycolonies.needs.status.citizens": "Citizens: %s / %s",
-  "com.legacycolonies.needs.status.food": "Rations in the granaries: %s (granaries: %s)",
+  "com.legacycolonies.needs.status.food": "Rations in the working cellars of the granaries: %s (granaries: %s)",
   "com.legacycolonies.needs.status.food_unloaded": "Rations: a granary is too far to be counted.",
   "com.legacycolonies.needs.status.full_era": "No new citizen: the colony is as big as its age allows.",
   "com.legacycolonies.needs.status.houses": "Houses: %s / %s",

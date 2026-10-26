@@ -8,7 +8,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 
 - Food, from the iron age (`"food": true` in an era file). At the start of each game day, each citizen takes one food
   that is not rotten (TFC decay) from the Firmalife food shelves and hangers in the room of the colony's granaries, and
-  is then full. Chests and barrels are not used. The first rations are taken the day after the colony enters the iron age.
+  is then full. Only shelves and hangers that the climate station finds in a working cellar count; chests and barrels
+  are not used. The first rations are taken the day after the colony enters the iron age.
 - A citizen without a ration gets unhappy (a little after one day, more after two) and so works more slowly, and the
   players of the colony get a message. No new citizen arrives while a citizen went without a ration, or while the
   granaries could not feed one more.

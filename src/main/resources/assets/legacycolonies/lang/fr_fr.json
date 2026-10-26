@@ -56,7 +56,7 @@
   "com.legacycolonies.needs.level_too_high": "%s niveau %s n'est pas accessible à %s (niveau %s au plus).",
   "com.legacycolonies.needs.status.beds": "Lits : %s",
   "com.legacycolonies.needs.status.citizens": "Colons : %s / %s",
-  "com.legacycolonies.needs.status.food": "Rations dans les greniers : %s (greniers : %s)",
+  "com.legacycolonies.needs.status.food": "Rations dans les celliers valides des greniers : %s (greniers : %s)",
   "com.legacycolonies.needs.status.food_unloaded": "Rations : un grenier est trop loin pour être compté.",
   "com.legacycolonies.needs.status.full_era": "Pas de nouveau colon : la colonie a atteint la taille maximum de son âge.",
   "com.legacycolonies.needs.status.houses": "Maisons : %s / %s",

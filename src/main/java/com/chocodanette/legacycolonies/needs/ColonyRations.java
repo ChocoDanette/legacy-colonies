@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 
 /**
  * Daily rations, from the iron age: at the start of each game day, each citizen takes one food that is not rotten from
- * the food shelves and hangers of the colony's granaries, which are Firmalife cellars, and is then full. Chests and
+ * the food shelves and hangers of the colony's granaries, which must be working Firmalife cellars, and is then full. Chests and
  * barrels are not used. A citizen without a ration gets unhappy (see
  * {@link RationHappinessModifier}), and no new citizen arrives while the granaries could not feed one more.
  */
@@ -53,6 +54,12 @@ public final class ColonyRations
      */
     private static Method  isRotten;
     private static boolean tfcLooked = false;
+
+    /**
+     * Firmalife's {@code FoodShelfBlockEntity.isClimateValid()}, or null without Firmalife.
+     */
+    private static Method  isClimateValid;
+    private static boolean firmalifeLooked = false;
 
     private ColonyRations()
     {
@@ -253,7 +260,38 @@ public final class ColonyRations
         {
             return null;
         }
-        return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+        return inWorkingCellar(level.getBlockEntity(pos)) ? level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) : null;
+    }
+
+    /**
+     * Whether a food shelf or hanger is in a cellar its climate station finds valid ({@code FoodShelfBlockEntity.isClimateValid}).
+     */
+    private static boolean inWorkingCellar(final BlockEntity entity)
+    {
+        if (!firmalifeLooked)
+        {
+            firmalifeLooked = true;
+            try
+            {
+                isClimateValid = Class.forName("com.eerussianguy.firmalife.common.blockentities.FoodShelfBlockEntity").getMethod("isClimateValid");
+            }
+            catch (final ReflectiveOperationException e)
+            {
+                LegacyColonies.LOGGER.warn("Firmalife food shelves not found: no citizen can take a ration");
+            }
+        }
+        if (isClimateValid == null || entity == null || !isClimateValid.getDeclaringClass().isInstance(entity))
+        {
+            return false;
+        }
+        try
+        {
+            return (boolean) isClimateValid.invoke(entity);
+        }
+        catch (final ReflectiveOperationException e)
+        {
+            return false;
+        }
     }
 
     private static boolean isRation(final ItemStack stack)
