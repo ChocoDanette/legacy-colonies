@@ -24,6 +24,10 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 - The inn and the house count only their real beds, still in place, up to one bed per level above 1 for the inn (none
   at level 1, 2 at level 3, 3 at level 4) and one per level for the house. The inn used to hold 4 citizens at level 1
   whatever its beds. Rules for the inn's level 4: 3 beds.
+- The builder only asks for base materials: lumber, brick blocks, mud brick blocks, logs. It makes the derived blocks
+  itself, for what their TFC recipe costs: plank block 4 lumber, plank stairs 3, plank slab 2, fence 2.25, fence gate 6,
+  door 6, trapdoor 3, chest 8, barrel 7; brick or mud brick stairs 3/4 of a block, slab 1/2, wall 1. A fractional cost
+  is spread over the blocks of the plan by position.
 - `/legacycolonies needs` shows the era of the colony, its citizens, beds and houses, and when the next citizen arrives.
 
 ## 0.6.1
