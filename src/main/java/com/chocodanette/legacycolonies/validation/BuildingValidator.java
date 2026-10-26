@@ -3,6 +3,7 @@ package com.chocodanette.legacycolonies.validation;
 import com.chocodanette.legacycolonies.colony.BuildMode;
 import com.chocodanette.legacycolonies.colony.BuildModeHandler;
 import com.chocodanette.legacycolonies.colony.BuildModes;
+import com.chocodanette.legacycolonies.needs.ColonyNeeds;
 import com.minecolonies.api.advancements.AdvancementTriggers;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
@@ -68,6 +69,12 @@ public final class BuildingValidator
         if (target > building.getMaxBuildingLevel())
         {
             fail(player, Component.translatable(KEY + "max_level"));
+            return;
+        }
+        final Component eraRefusal = ColonyNeeds.refuseLevel(building, target);
+        if (eraRefusal != null)
+        {
+            fail(player, eraRefusal);
             return;
         }
         if (colony.getWorkManager().getWorkOrders().values().stream().anyMatch(order -> order.getLocation().equals(hutPos)))

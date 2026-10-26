@@ -8,6 +8,8 @@
     "AbstractEntityAIBasicMixin",
     "AbstractWorkOrderMixin",
     "BlueprintAccessor",
+    "CitizenManagerMixin",
+    "ReproductionManagerMixin",
     "WorkOrderBuildingMixin"
   ],
   "injectors": {

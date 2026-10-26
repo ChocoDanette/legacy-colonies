@@ -1,22 +1,14 @@
 package com.chocodanette.legacycolonies.building.module;
 
-import com.minecolonies.core.colony.buildings.modules.LivingBuildingModule;
-
 /**
- * Living module of the inn: citizens without a house are moved in automatically, like in a house.
+ * Living module of the inn: citizens without a house are moved in automatically, like in a house. Level 1 is a bare
+ * shelter; each further level holds one more bed (2 beds at level 3, 3 at level 4).
  */
-public class InnLivingModule extends LivingBuildingModule
+public class InnLivingModule extends LegacyLivingModule
 {
-    /**
-     * Beds at level 1; each further level adds {@link #BEDS_PER_LEVEL}.
-     */
-    public static final int BASE_BEDS      = 4;
-    public static final int BEDS_PER_LEVEL = 2;
-
     @Override
-    public int getModuleMax()
+    protected int maxBeds(final int level)
     {
-        final int level = building.getBuildingLevel();
-        return level > 0 ? BASE_BEDS + (level - 1) * BEDS_PER_LEVEL : 0;
+        return level - 1;
     }
 }

@@ -3,11 +3,13 @@ package com.chocodanette.legacycolonies;
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
 import com.chocodanette.legacycolonies.block.BlockForge;
+import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
 import com.chocodanette.legacycolonies.block.BlockStable;
 import com.chocodanette.legacycolonies.block.BlockWarehouse;
 import com.chocodanette.legacycolonies.building.BuildingBuilderPost;
 import com.chocodanette.legacycolonies.building.BuildingColonyCampfire;
+import com.chocodanette.legacycolonies.building.module.HouseLivingModule;
 import com.chocodanette.legacycolonies.building.module.InnLivingModule;
 import com.minecolonies.api.colony.buildings.registry.BuildingEntry;
 import com.minecolonies.apiimp.CommonMinecoloniesAPIImpl;
@@ -72,6 +74,25 @@ public final class ModBuildings
       .setBuildingViewProducer(() -> EmptyView::new)
       .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockInn.NAME))
       .addBuildingModuleProducer(INN_LIVING)
+      .addBuildingModuleProducer(BED)
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * Living module of the house, under its own key like the inn's.
+     */
+    public static final BuildingEntry.ModuleProducer<HouseLivingModule, LivingBuildingModuleView> HOUSE_LIVING =
+      new BuildingEntry.ModuleProducer<>("house_living", HouseLivingModule::new, () -> LivingBuildingModuleView::new);
+
+    /**
+     * The house: one citizen per bed. How many houses a colony may build, and up to which level, depends on its era.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> HOUSE = BUILDINGS.register(BlockHouse.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.HOUSE.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockHouse.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockHouse.NAME))
+      .addBuildingModuleProducer(HOUSE_LIVING)
       .addBuildingModuleProducer(BED)
       .addBuildingModuleProducer(STATS_MODULE)
       .createBuildingEntry());

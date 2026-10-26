@@ -4,6 +4,28 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.7.0
+
+- Colony needs by era. The modpack tells the addon the era of each colony (`ColonyNeeds.setColonyEra`, called by its
+  KubeJS colony script); a colony starts in the primitive age. Each era, in
+  `data/<namespace>/legacycolonies/colony_eras/`, sets the most citizens the colony may have, whether each citizen needs
+  a bed, the game days between two new citizens, and how many huts of a kind, and up to which level, the colony may build.
+  The jar ships three eras: primitive (1 citizen, no bed, inn level 1), copper (4 citizens, one bed each, inn up to
+  level 3, 2 houses of level 1) and iron (9 citizens, one bed each, inn up to level 4, 3 houses up to level 2). Later
+  eras keep the iron rules until they get their own file.
+- New citizens come from outside: while the colony has room in its era (and a free bed when the era needs beds), a
+  citizen arrives every 2 game days at the edge of the colony's first claim, and walks in. The first citizen also
+  arrives from the edge instead of appearing on the campfire. MineColonies' children are turned off.
+- A hut level, or one more hut, that the era does not allow is refused: when placing the hut, when confirming a
+  hand-built level, and by the builder.
+- New hut: the house (`legacycolonies:house`), one citizen per bed, up to 1 bed at level 1 and 2 beds at level 2.
+  Rules for building it by hand: a covered room with a door and 1 bed (level 1), 2 beds (level 2). It looks like
+  MineColonies' residence for now.
+- The inn and the house count only their real beds, still in place, up to one bed per level above 1 for the inn (none
+  at level 1, 2 at level 3, 3 at level 4) and one per level for the house. The inn used to hold 4 citizens at level 1
+  whatever its beds. Rules for the inn's level 4: 3 beds.
+- `/legacycolonies needs` shows the era of the colony, its citizens, beds and houses, and when the next citizen arrives.
+
 ## 0.6.1
 
 - Who builds a hut is chosen once. Giving the hut to the builder (build or upgrade from its window) makes every level
