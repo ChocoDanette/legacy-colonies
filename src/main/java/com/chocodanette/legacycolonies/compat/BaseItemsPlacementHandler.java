@@ -1,9 +1,9 @@
 package com.chocodanette.legacycolonies.compat;
 
-import com.ldtteam.structurize.placement.structure.IStructureHandler;
 import com.ldtteam.structurize.placement.IPlacementContext;
 import com.ldtteam.structurize.placement.handlers.placement.IPlacementHandler;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
+import com.ldtteam.structurize.placement.structure.IStructureHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -16,10 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,16 +30,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The builder only asks for base materials (lumber, brick and mud brick blocks) and makes the blocks derived from them
- * itself: stairs, slabs, walls, plank blocks, fences, doors, trapdoors, chests and barrels. Each derived block costs
- * what its TFC crafting recipe uses, per block. A fractional cost (a stair is 3/4 of a brick block) is spread over the
- * blocks of the plan: some cost one more, some one less, by position.
+ * The builder only asks for base materials (lumber, brick and mud brick blocks) and crafts the blocks derived from them
+ * itself, with the player's TFC recipes: stairs, slabs, walls, plank blocks, fences, doors, trapdoors, chests and
+ * barrels. A craft makes a whole batch (8 stairs from 6 brick blocks): the builder places one and keeps the others in
+ * its inventory for the next blocks of that kind.
  * <p>
  * Placement itself is left to the handler that would place the block otherwise; only the requested items change.
  */
 public class BaseItemsPlacementHandler implements IPlacementHandler
 {
-    private record Cost(Pattern item, String base, double count)
+    /**
+     * @param item   item id of the derived block; group 1 is the wood, rock or soil.
+     * @param base   item id of the base material, with {@code %s} for the group.
+     * @param count  base items one craft uses (intermediate plank blocks counted as 4 lumber each).
+     * @param output derived items one craft makes.
+     */
+    private record Recipe(Pattern item, String base, int count, int output)
     {
     }
 
@@ -44,40 +53,54 @@ public class BaseItemsPlacementHandler implements IPlacementHandler
     private static final String LUMBER = "tfc:wood/lumber/%s";
 
     /**
-     * Item ids of derived blocks and their cost; the first match wins, so the plank block comes after its stairs and slabs.
+     * The first match wins, so the plank block comes after its stairs and slabs.
      */
-    private static final List<Cost> COSTS = List.of(
-      cost("tfc:wood/planks/" + WOOD + "_stairs", LUMBER, 3),
-      cost("tfc:wood/planks/" + WOOD + "_slab", LUMBER, 2),
-      cost("tfc:wood/planks/" + WOOD, LUMBER, 4),
-      cost("tfc:wood/fence/" + WOOD, LUMBER, 2.25),
-      cost("tfc:wood/fence_gate/" + WOOD, LUMBER, 6),
-      cost("tfc:wood/door/" + WOOD, LUMBER, 6),
-      cost("tfc:wood/trapdoor/" + WOOD, LUMBER, 3),
-      cost("tfc:wood/chest/" + WOOD, LUMBER, 8),
-      cost("tfc:wood/barrel/" + WOOD, LUMBER, 7),
-      cost("tfc:rock/bricks/" + WOOD + "_stairs", "tfc:rock/bricks/%s", 0.75),
-      cost("tfc:rock/bricks/" + WOOD + "_slab", "tfc:rock/bricks/%s", 0.5),
-      cost("tfc:rock/bricks/" + WOOD + "_wall", "tfc:rock/bricks/%s", 1),
-      cost("tfc:mud_bricks/" + WOOD + "_stairs", "tfc:mud_bricks/%s", 0.75),
-      cost("tfc:mud_bricks/" + WOOD + "_slab", "tfc:mud_bricks/%s", 0.5),
-      cost("tfc:mud_bricks/" + WOOD + "_wall", "tfc:mud_bricks/%s", 1)
+    private static final List<Recipe> RECIPES = List.of(
+      recipe("tfc:wood/planks/" + WOOD + "_stairs", LUMBER, 24, 8),
+      recipe("tfc:wood/planks/" + WOOD + "_slab", LUMBER, 12, 6),
+      recipe("tfc:wood/planks/" + WOOD, LUMBER, 4, 1),
+      recipe("tfc:wood/fence/" + WOOD, LUMBER, 18, 8),
+      recipe("tfc:wood/fence_gate/" + WOOD, LUMBER, 12, 2),
+      recipe("tfc:wood/door/" + WOOD, LUMBER, 6, 1),
+      recipe("tfc:wood/trapdoor/" + WOOD, LUMBER, 6, 2),
+      recipe("tfc:wood/chest/" + WOOD, LUMBER, 8, 1),
+      recipe("tfc:wood/barrel/" + WOOD, LUMBER, 7, 1),
+      recipe("tfc:rock/bricks/" + WOOD + "_stairs", "tfc:rock/bricks/%s", 6, 8),
+      recipe("tfc:rock/bricks/" + WOOD + "_slab", "tfc:rock/bricks/%s", 3, 6),
+      recipe("tfc:rock/bricks/" + WOOD + "_wall", "tfc:rock/bricks/%s", 6, 6),
+      recipe("tfc:mud_bricks/" + WOOD + "_stairs", "tfc:mud_bricks/%s", 6, 8),
+      recipe("tfc:mud_bricks/" + WOOD + "_slab", "tfc:mud_bricks/%s", 3, 6),
+      recipe("tfc:mud_bricks/" + WOOD + "_wall", "tfc:mud_bricks/%s", 6, 6)
     );
+
+    /**
+     * True while Structurize lists the items of a plan (see {@code StructurePlacerMixin}), not placing it.
+     */
+    public static final ThreadLocal<Boolean> LISTING = ThreadLocal.withInitial(() -> false);
+
+    /**
+     * While listing, the derived items left over from the batches counted so far, per item.
+     */
+    public static final ThreadLocal<Map<Item, Integer>> LISTED_LEFTOVERS = ThreadLocal.withInitial(HashMap::new);
+
+    private record Craft(Item derived, ItemStack inputs, int output)
+    {
+    }
 
     /**
      * The handler that places each block we take over, found the first time the block is seen.
      */
     private final Map<Block, IPlacementHandler> delegates = new ConcurrentHashMap<>();
 
-    private static Cost cost(final String item, final String base, final double count)
+    private static Recipe recipe(final String item, final String base, final int count, final int output)
     {
-        return new Cost(Pattern.compile(item), base, count);
+        return new Recipe(Pattern.compile(item), base, count, output);
     }
 
     @Override
     public boolean canHandle(final Level world, final BlockPos pos, final BlockState blockState)
     {
-        return costOf(blockState.getBlock().asItem()) != null && delegate(world, pos, blockState) != null;
+        return craftOf(blockState.getBlock().asItem()) != null && delegate(world, pos, blockState) != null;
     }
 
     @Nullable
@@ -108,7 +131,24 @@ public class BaseItemsPlacementHandler implements IPlacementHandler
       @NotNull final IPlacementContext placementContext)
     {
         final IPlacementHandler delegate = delegate(world, pos, blockState);
-        return delegate == null ? ActionProcessingResult.DENY : delegate.handle(world, pos, blockState, tileEntityData, placementContext);
+        if (delegate == null)
+        {
+            return ActionProcessingResult.DENY;
+        }
+        final IItemHandler inventory = inventoryOf(placementContext);
+        final Craft craft = craftOf(blockState.getBlock().asItem());
+        // Decided like getRequiredItems, before placing: without one in stock, this block comes from a fresh batch.
+        final boolean fromBatch = inventory != null && craft != null && count(inventory, craft.derived()) == 0;
+        final ActionProcessingResult result = delegate.handle(world, pos, blockState, tileEntityData, placementContext);
+        if (fromBatch && result == ActionProcessingResult.SUCCESS && craft.output() > 1)
+        {
+            final ItemStack rest = ItemHandlerHelper.insertItemStacked(inventory, new ItemStack(craft.derived(), craft.output() - 1), false);
+            if (!rest.isEmpty())
+            {
+                Block.popResource(world, pos, rest);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -139,12 +179,37 @@ public class BaseItemsPlacementHandler implements IPlacementHandler
             return List.of();
         }
         final List<ItemStack> items = new ArrayList<>();
+        final IItemHandler inventory = inventoryOf(placementContext);
         for (final ItemStack stack : delegate.getRequiredItems(world, pos, blockState, tileEntityData, placementContext))
         {
-            final ItemStack base = toBase(stack, pos);
-            if (!base.isEmpty())
+            final Craft craft = craftOf(stack.getItem());
+            if (craft == null)
             {
-                items.add(base);
+                items.add(stack);
+            }
+            else if (LISTING.get())
+            {
+                // Listing a plan: count whole batches, using up the leftovers of earlier ones (and the builder's stock).
+                final Map<Item, Integer> leftovers = LISTED_LEFTOVERS.get();
+                final int stock = leftovers.computeIfAbsent(craft.derived(), item -> inventory == null ? 0 : count(inventory, item));
+                if (stock > 0)
+                {
+                    leftovers.put(craft.derived(), stock - 1);
+                }
+                else
+                {
+                    items.add(craft.inputs().copy());
+                    leftovers.put(craft.derived(), craft.output() - 1);
+                }
+            }
+            else if (inventory != null && count(inventory, craft.derived()) > 0)
+            {
+                // One left from an earlier batch.
+                items.add(stack);
+            }
+            else
+            {
+                items.add(craft.inputs().copy());
             }
         }
         return items;
@@ -161,58 +226,42 @@ public class BaseItemsPlacementHandler implements IPlacementHandler
         return delegate == null ? worldState.equals(blueprintState) : delegate.doesWorldStateMatchBlueprintState(worldState, blueprintState, blockEntityData, placementContext);
     }
 
+    /**
+     * The craft that makes this item, or null when the builder asks for the item itself.
+     */
     @Nullable
-    private static Matcher costOf(final Item item, final Cost[] found)
+    private static Craft craftOf(final Item item)
     {
         final String id = BuiltInRegistries.ITEM.getKey(item).toString();
-        for (final Cost cost : COSTS)
+        for (final Recipe recipe : RECIPES)
         {
-            final Matcher matcher = cost.item().matcher(id);
+            final Matcher matcher = recipe.item().matcher(id);
             if (matcher.matches())
             {
-                found[0] = cost;
-                return matcher;
+                final Item base = BuiltInRegistries.ITEM.get(ResourceLocation.parse(String.format(recipe.base(), matcher.group(1))));
+                return base == Items.AIR ? null : new Craft(item, new ItemStack(base, recipe.count()), recipe.output());
             }
         }
         return null;
     }
 
     @Nullable
-    private static Cost costOf(final Item item)
+    private static IItemHandler inventoryOf(final IPlacementContext placementContext)
     {
-        final Cost[] found = new Cost[1];
-        return costOf(item, found) == null ? null : found[0];
+        return placementContext instanceof final IStructureHandler handler && !handler.isCreative() ? handler.getInventory() : null;
     }
 
-    /**
-     * The base items for a stack of derived blocks, or the stack itself when it is not a derived block.
-     */
-    private static ItemStack toBase(final ItemStack stack, final BlockPos pos)
+    private static int count(final IItemHandler inventory, final Item item)
     {
-        final Cost[] found = new Cost[1];
-        final Matcher matcher = costOf(stack.getItem(), found);
-        if (matcher == null)
+        int count = 0;
+        for (int slot = 0; slot < inventory.getSlots(); slot++)
         {
-            return stack;
+            final ItemStack stack = inventory.getStackInSlot(slot);
+            if (stack.is(item))
+            {
+                count += stack.getCount();
+            }
         }
-        final Item base = BuiltInRegistries.ITEM.get(ResourceLocation.parse(String.format(found[0].base(), matcher.group(1))));
-        if (base == Items.AIR)
-        {
-            return stack;
-        }
-        final int count = amount(pos, found[0].count() * stack.getCount());
-        return count <= 0 ? ItemStack.EMPTY : new ItemStack(base, count);
-    }
-
-    /**
-     * The whole part of the cost, plus one for a share of the positions equal to its fractional part.
-     */
-    private static int amount(final BlockPos pos, final double cost)
-    {
-        final int whole = (int) Math.floor(cost);
-        long hash = pos.asLong() * 0x9E3779B97F4A7C15L;
-        hash ^= hash >>> 31;
-        final double roll = (hash >>> 40) / (double) (1L << 24);
-        return whole + (roll < cost - whole ? 1 : 0);
+        return count;
     }
 }

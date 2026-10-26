@@ -10,6 +10,7 @@
     "BlueprintAccessor",
     "CitizenManagerMixin",
     "ReproductionManagerMixin",
+    "StructurePlacerMixin",
     "WorkOrderBuildingMixin"
   ],
   "injectors": {
