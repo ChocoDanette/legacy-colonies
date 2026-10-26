@@ -4,6 +4,18 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.8.2
+
+- Giving a Legacy hut to the builder no longer fails. A hut placed with a right click got the path of its plan in the
+  background, after its building was created, so the building kept an empty path and MineColonies crashed on the
+  builder's work order (`StringIndexOutOfBoundsException` in `WorkOrderBuilding.create`): the forge could not be given
+  to the builder. The plan is now found at once, by its file name (`<hut><level>.blueprint` in the Legacy pack).
+- A Legacy hut always takes its plans from the Legacy pack, even when it was placed while the colony was in another
+  style (an inn placed in Colonial looked for `colonial/null2.blueprint` and could not be upgraded). Huts already
+  placed are fixed on their next load or work order.
+- When the Legacy pack has no plan for the next level of a hut, the builder refuses with a message instead of doing
+  nothing.
+
 ## 0.8.1
 
 - No more "Error loading blueprint: ...null1.blueprint" in the log. MineColonies does not know the Legacy huts, so a hut

@@ -33,11 +33,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class HutPlacementHandler
 {
-    /**
-     * Structure pack of the modpack, preferred for the hut's blueprints when it is installed.
-     */
-    private static final String LEGACY_PACK = "Legacy";
-
     private HutPlacementHandler()
     {
     }
@@ -108,11 +103,18 @@ public final class HutPlacementHandler
         final BlockState state = hutBlock.defaultBlockState().setValue(AbstractBlockHut.FACING, player.getDirection());
         level.setBlockAndUpdate(pos, state);
         final StructurePackMeta pack = packFor(colony);
-        if (level.getBlockEntity(pos) instanceof final TileEntityColonyBuilding hut && pack != null)
+        final String legacyPath = pack == null || !LegacyBlueprints.isLegacyHut(hutBlock.getBuildingEntry()) ? null
+                                    : LegacyBlueprints.find(pack, hutBlock.getBuildingEntry(), 1);
+        if (level.getBlockEntity(pos) instanceof final TileEntityColonyBuilding hut && legacyPath != null)
+        {
+            // Set before the building is created below, so that it starts with its plan.
+            hut.setStructurePack(pack);
+            hut.setBlueprintPath(legacyPath);
+        }
+        else if (level.getBlockEntity(pos) instanceof final TileEntityColonyBuilding hut && pack != null)
         {
             // Same lookup as MineColonies' direct placement: the level 1 blueprint of the pack whose anchor is this block.
             hut.setStructurePack(pack);
-            final String packPath = pack.getPath().toString() + "/";
             ServerFutureProcessor.queueBlueprint(new ServerFutureProcessor.BlueprintProcessingData(
               StructurePacks.findBlueprintFuture(pack.getName(),
                 blueprint -> blueprint.getBlockState(blueprint.getPrimaryBlockOffset()).getBlock() == hutBlock,
@@ -121,9 +123,10 @@ public final class HutPlacementHandler
               blueprint -> {
                   if (blueprint != null)
                   {
-                      final String folder = blueprint.getFilePath().toString().replace(packPath, "");
+                      // relativize, not a "/" replace: on Windows the paths use backslashes.
+                      final String folder = pack.getPath().relativize(blueprint.getFilePath()).toString().replace('\\', '/');
                       final String name = blueprint.getFileName();
-                      hut.setBlueprintPath(folder + "/" + name.substring(0, name.length() - 1) + "1.blueprint");
+                      hut.setBlueprintPath((folder.isEmpty() ? "" : folder + "/") + name.substring(0, name.length() - 1) + "1.blueprint");
                   }
               }));
         }
@@ -137,9 +140,9 @@ public final class HutPlacementHandler
     @Nullable
     private static StructurePackMeta packFor(@Nullable final IColony colony)
     {
-        if (StructurePacks.hasPack(LEGACY_PACK))
+        if (LegacyBlueprints.pack() != null)
         {
-            return StructurePacks.getStructurePack(LEGACY_PACK);
+            return LegacyBlueprints.pack();
         }
         if (colony != null && StructurePacks.hasPack(colony.getStructurePack()))
         {
