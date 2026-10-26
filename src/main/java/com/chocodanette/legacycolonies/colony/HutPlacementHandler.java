@@ -2,6 +2,7 @@ package com.chocodanette.legacycolonies.colony;
 
 import com.chocodanette.legacycolonies.block.BlockBuilderPost;
 import com.chocodanette.legacycolonies.block.BlockColonyCampfire;
+import com.chocodanette.legacycolonies.needs.ColonyNeeds;
 import com.ldtteam.structurize.storage.ServerFutureProcessor;
 import com.ldtteam.structurize.storage.StructurePackMeta;
 import com.ldtteam.structurize.storage.StructurePacks;
@@ -95,6 +96,12 @@ public final class HutPlacementHandler
         if (colony != null && !colony.getPermissions().hasPermission(player, Action.MANAGE_HUTS))
         {
             player.displayClientMessage(Component.translatable("com.minecolonies.coremod.placement.noperm"), true);
+            return;
+        }
+        final Component eraRefusal = colony == null ? null : ColonyNeeds.refusePlacement(colony, hutBlock.getBuildingEntry());
+        if (eraRefusal != null)
+        {
+            player.displayClientMessage(eraRefusal, true);
             return;
         }
 

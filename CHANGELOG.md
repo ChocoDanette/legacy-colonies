@@ -4,6 +4,46 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.8.0
+
+- Food, from the iron age (`"food": true` in an era file). At the start of each game day, each citizen takes one food
+  that is not rotten (TFC decay) from the Firmalife food shelves and hangers in the room of the colony's granaries, and
+  is then full. Only shelves and hangers that the climate station finds in a working cellar count; chests and barrels
+  are not used. The first rations are taken the day after the colony enters the iron age.
+- A citizen without a ration gets unhappy (a little after one day, more after two) and so works more slowly, and the
+  players of the colony get a message. No new citizen arrives while a citizen went without a ration, or while the
+  granaries could not feed one more.
+- New hut: the granary (`legacycolonies:granary`), a Firmalife cellar. Rules for building it by hand: a closed room with
+  a door, a climate station and 1 food shelf or hanger (level 1), 2 (level 2), 4 (level 3). The iron age allows one granary, up to level 2; earlier
+  ages none. It looks like MineColonies' restaurant for now.
+- `/legacycolonies needs` shows the rations in the granaries and why no citizen arrives.
+
+## 0.7.0
+
+- Colony needs by era. The modpack tells the addon the era of each colony (`ColonyNeeds.setColonyEra`, called by its
+  KubeJS colony script); a colony starts in the primitive age. Each era, in
+  `data/<namespace>/legacycolonies/colony_eras/`, sets the most citizens the colony may have, whether each citizen needs
+  a bed, the game days between two new citizens, and how many huts of a kind, and up to which level, the colony may build.
+  The jar ships three eras: primitive (1 citizen, no bed, inn level 1), copper (4 citizens, one bed each, inn up to
+  level 3, 2 houses of level 1) and iron (9 citizens, one bed each, inn up to level 4, 3 houses up to level 2). Later
+  eras keep the iron rules until they get their own file.
+- New citizens come from outside: while the colony has room in its era (and a free bed when the era needs beds), a
+  citizen arrives every 2 game days at the edge of the colony's first claim, and walks in. The first citizen also
+  arrives from the edge instead of appearing on the campfire. MineColonies' children are turned off.
+- A hut level, or one more hut, that the era does not allow is refused: when placing the hut, when confirming a
+  hand-built level, and by the builder.
+- New hut: the house (`legacycolonies:house`), one citizen per bed, up to 1 bed at level 1 and 2 beds at level 2.
+  Rules for building it by hand: a covered room with a door and 1 bed (level 1), 2 beds (level 2). It looks like
+  MineColonies' residence for now.
+- The inn and the house count only their real beds, still in place, up to one bed per level above 1 for the inn (none
+  at level 1, 2 at level 3, 3 at level 4) and one per level for the house. The inn used to hold 4 citizens at level 1
+  whatever its beds. Rules for the inn's level 4: 3 beds.
+- The builder only asks for base materials: lumber, brick blocks, mud brick blocks, logs. It crafts the derived blocks
+  itself with the player's TFC recipes (stairs, slabs, walls, plank blocks, fences, fence gates, doors, trapdoors,
+  chests, barrels): one craft makes a whole batch, for example 8 stairs from 6 brick blocks, and the builder keeps the
+  rest in its inventory for the next blocks of that kind. The list of materials of a plan counts whole batches.
+- `/legacycolonies needs` shows the era of the colony, its citizens, beds and houses, and when the next citizen arrives.
+
 ## 0.6.1
 
 - Who builds a hut is chosen once. Giving the hut to the builder (build or upgrade from its window) makes every level

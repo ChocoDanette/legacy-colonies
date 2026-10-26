@@ -21,6 +21,14 @@
       "requires": [
         { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 2, "name": "lit" }
       ]
+    },
+    "4": {
+      "closed": false,
+      "door": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 3, "name": "lit" }
+      ]
     }
   }
 }

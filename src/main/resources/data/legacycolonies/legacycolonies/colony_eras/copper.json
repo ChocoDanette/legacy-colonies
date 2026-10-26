@@ -1,0 +1,18 @@
+{
+  "era": 2,
+  "max_citizens": 4,
+  "beds": true,
+  "arrival_days": 2,
+  "huts": {
+    "legacycolonies:inn": {
+      "max_level": 3
+    },
+    "legacycolonies:house": {
+      "max_count": 2,
+      "max_level": 1
+    },
+    "legacycolonies:granary": {
+      "max_count": 0
+    }
+  }
+}

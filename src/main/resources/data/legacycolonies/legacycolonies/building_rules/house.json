@@ -1,0 +1,19 @@
+{
+  "hut": "legacycolonies:house",
+  "levels": {
+    "1": {
+      "closed": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 1, "name": "lit" }
+      ]
+    },
+    "2": {
+      "closed": false,
+      "light": false,
+      "requires": [
+        { "blocks": ["#minecraft:beds", "tfc:thatch_bed"], "count": 2, "name": "lit" }
+      ]
+    }
+  }
+}
