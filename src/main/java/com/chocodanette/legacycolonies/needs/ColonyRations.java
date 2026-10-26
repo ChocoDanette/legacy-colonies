@@ -15,22 +15,23 @@ import com.minecolonies.api.util.constant.CitizenConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Daily rations, from the iron age: at the start of each game day, each citizen takes one food that is not rotten from
- * the chests and barrels of the colony's granaries, and is then full. A citizen without a ration gets unhappy (see
+ * the food shelves and hangers of the colony's granaries, which are Firmalife cellars, and is then full. Chests and
+ * barrels are not used. A citizen without a ration gets unhappy (see
  * {@link RationHappinessModifier}), and no new citizen arrives while the granaries could not feed one more.
  */
 public final class ColonyRations
@@ -38,6 +39,12 @@ public final class ColonyRations
     private static final int  CHECK_INTERVAL = 100;
     private static final long TICKS_PER_DAY  = 24000;
     private static final String KEY = "com.legacycolonies.needs.food.";
+
+    /**
+     * Firmalife's food shelves and hangers, the only stores citizens take their rations from.
+     */
+    private static final String  FIRMALIFE    = "firmalife";
+    private static final Pattern CELLAR_STORE = Pattern.compile("wood/(food_shelf|hanger)/.+");
 
     private static boolean errorLogged = false;
 
@@ -211,7 +218,7 @@ public final class ColonyRations
     }
 
     /**
-     * Item stores in the rooms of the colony's built granaries, or null when one of them is not loaded.
+     * Food shelves and hangers in the rooms of the colony's built granaries, or null when one of them is not loaded.
      */
     private static List<IItemHandler> stores(final IColony colony, final ServerLevel level)
     {
@@ -241,15 +248,10 @@ public final class ColonyRations
 
     private static IItemHandler store(final ServerLevel level, final BlockPos pos)
     {
-        final BlockEntity entity = level.getBlockEntity(pos);
-        if (entity == null)
+        final ResourceLocation block = BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos).getBlock());
+        if (!block.getNamespace().equals(FIRMALIFE) || !CELLAR_STORE.matcher(block.getPath()).matches())
         {
             return null;
-        }
-        // Each half of a double chest on its own, so it is not counted twice.
-        if (entity instanceof final Container container)
-        {
-            return new InvWrapper(container);
         }
         return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
     }

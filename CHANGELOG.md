@@ -7,13 +7,13 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 ## 0.8.0
 
 - Food, from the iron age (`"food": true` in an era file). At the start of each game day, each citizen takes one food
-  that is not rotten (TFC decay) from the chests, barrels and large vessels in the room of the colony's granaries, and is
-  then full. The first rations are taken the day after the colony enters the iron age.
+  that is not rotten (TFC decay) from the Firmalife food shelves and hangers in the room of the colony's granaries, and
+  is then full. Chests and barrels are not used. The first rations are taken the day after the colony enters the iron age.
 - A citizen without a ration gets unhappy (a little after one day, more after two) and so works more slowly, and the
   players of the colony get a message. No new citizen arrives while a citizen went without a ration, or while the
   granaries could not feed one more.
-- New hut: the granary (`legacycolonies:granary`). Rules for building it by hand: a closed room with a door and 1 chest,
-  barrel or large vessel (level 1), 2 (level 2), 4 (level 3). The iron age allows one granary, up to level 2; earlier
+- New hut: the granary (`legacycolonies:granary`), a Firmalife cellar. Rules for building it by hand: a closed room with
+  a door, a climate station and 1 food shelf or hanger (level 1), 2 (level 2), 4 (level 3). The iron age allows one granary, up to level 2; earlier
   ages none. It looks like MineColonies' restaurant for now.
 - `/legacycolonies needs` shows the rations in the granaries and why no citizen arrives.
 
