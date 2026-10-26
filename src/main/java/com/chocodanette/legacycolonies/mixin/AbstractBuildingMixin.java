@@ -1,10 +1,12 @@
 package com.chocodanette.legacycolonies.mixin;
 
+import com.chocodanette.legacycolonies.colony.BlueprintPathRepair;
 import com.chocodanette.legacycolonies.colony.BuildMode;
 import com.chocodanette.legacycolonies.colony.BuildModes;
 import com.chocodanette.legacycolonies.needs.ColonyNeeds;
 import com.minecolonies.api.colony.buildings.IBuilding;
 import com.minecolonies.api.colony.workorders.WorkOrderType;
+import com.minecolonies.api.tileentities.AbstractTileEntityColonyBuilding;
 import com.minecolonies.api.util.MessageUtils;
 import com.minecolonies.core.colony.buildings.AbstractBuilding;
 import net.minecraft.core.BlockPos;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * The builder would rebuild a hut built by hand from its plan, over the player's design: refuse to build, upgrade or
  * repair it. Removal stays possible. The builder also refuses a level, or a new hut, that the colony's era does not allow.
+ * A Legacy hut without a plan keeps its corners instead of loading "null1.blueprint" (see {@link BlueprintPathRepair}).
  */
 @Mixin(value = AbstractBuilding.class, remap = false)
 public abstract class AbstractBuildingMixin
@@ -47,6 +50,17 @@ public abstract class AbstractBuildingMixin
         if (refusal != null)
         {
             MessageUtils.format(refusal).sendTo(building.getColony()).forAllPlayers();
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "calculateCorners", at = @At("HEAD"), cancellable = true)
+    private void legacycolonies$keepCornersWithoutPlan(final CallbackInfo ci)
+    {
+        // With block data in its tile entity, MineColonies takes the corners from there and loads no plan.
+        final AbstractTileEntityColonyBuilding hut = ((AbstractBuilding) (Object) this).getTileEntity();
+        if ((hut == null || hut.getSchematicName().isEmpty()) && BlueprintPathRepair.hasNoPlan((IBuilding) (Object) this))
+        {
             ci.cancel();
         }
     }

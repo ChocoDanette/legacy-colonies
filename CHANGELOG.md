@@ -4,6 +4,13 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.8.1
+
+- No more "Error loading blueprint: ...null1.blueprint" in the log. MineColonies does not know the Legacy huts, so a hut
+  without a plan path got `null1.blueprint`. A hut built by hand, the builder's post and the campfire have no plan:
+  their prestige, block data and corners no longer load one. A hut for the builder gets the path of its plan in the
+  pack back, at its level (this also fixes a hut placed before its plans were in the pack).
+
 ## 0.8.0
 
 - Food, from the iron age (`"food": true` in an era file). At the start of each game day, each citizen takes one food
