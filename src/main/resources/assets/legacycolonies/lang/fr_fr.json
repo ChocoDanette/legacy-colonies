@@ -68,5 +68,6 @@
   "com.legacycolonies.needs.status.no_food_needed": "Nourriture : pas encore nécessaire",
   "com.legacycolonies.needs.status.title": "Colonie %s, %s",
   "com.legacycolonies.needs.status.unfed": "Pas de nouveau colon : %s colon(s) sans ration aujourd'hui.",
-  "com.legacycolonies.needs.too_many": "À %s, la colonie peut avoir %s × %s au plus."
+  "com.legacycolonies.needs.too_many": "À %s, la colonie peut avoir %s × %s au plus.",
+  "com.legacycolonies.plan.missing": "Il n'y a pas de plan pour %s niveau %s dans le pack %s : le bâtisseur ne peut pas le construire."
 }

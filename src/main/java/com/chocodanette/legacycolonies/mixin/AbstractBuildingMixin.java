@@ -3,6 +3,7 @@ package com.chocodanette.legacycolonies.mixin;
 import com.chocodanette.legacycolonies.colony.BlueprintPathRepair;
 import com.chocodanette.legacycolonies.colony.BuildMode;
 import com.chocodanette.legacycolonies.colony.BuildModes;
+import com.chocodanette.legacycolonies.colony.LegacyBlueprints;
 import com.chocodanette.legacycolonies.needs.ColonyNeeds;
 import com.minecolonies.api.colony.buildings.IBuilding;
 import com.minecolonies.api.colony.workorders.WorkOrderType;
@@ -21,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * The builder would rebuild a hut built by hand from its plan, over the player's design: refuse to build, upgrade or
  * repair it. Removal stays possible. The builder also refuses a level, or a new hut, that the colony's era does not allow.
  * A Legacy hut without a plan keeps its corners instead of loading "null1.blueprint" (see {@link BlueprintPathRepair}).
+ * Before a work order, a Legacy hut gets its plan in the Legacy pack: MineColonies fails on a hut without a plan path
+ * (StringIndexOutOfBoundsException in WorkOrderBuilding.create) and looks in the colony's style for one placed in it.
  */
 @Mixin(value = AbstractBuilding.class, remap = false)
 public abstract class AbstractBuildingMixin
@@ -47,6 +50,23 @@ public abstract class AbstractBuildingMixin
         }
         final IBuilding building = (IBuilding) (Object) this;
         final Component refusal = ColonyNeeds.refuseLevel(building, building.getBuildingLevel() + 1);
+        if (refusal != null)
+        {
+            MessageUtils.format(refusal).sendTo(building.getColony()).forAllPlayers();
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "requestWorkOrder", at = @At("HEAD"), cancellable = true)
+    private void legacycolonies$preparePlan(final WorkOrderType type, final BlockPos builder, final CallbackInfo ci)
+    {
+        if (type == WorkOrderType.REMOVE)
+        {
+            return;
+        }
+        final IBuilding building = (IBuilding) (Object) this;
+        final int target = type == WorkOrderType.REPAIR ? Math.max(1, building.getBuildingLevel()) : building.getBuildingLevel() + 1;
+        final Component refusal = LegacyBlueprints.prepareForBuilder(building, target);
         if (refusal != null)
         {
             MessageUtils.format(refusal).sendTo(building.getColony()).forAllPlayers();
