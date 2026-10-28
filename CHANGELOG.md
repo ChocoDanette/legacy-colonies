@@ -4,6 +4,13 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.8.3
+
+- Beds no longer get lost. When a citizen goes to sleep, MineColonies forgets a registered bed that is not in the
+  `minecraft:beds` tag, and the TFC thatch bed is not (the modpack now adds it). A bed placed by a player is not
+  registered either. A house or an inn with fewer beds than its level allows now looks for the beds inside it (at most
+  every 10 seconds) and registers them again.
+
 ## 0.8.2
 
 - Giving a Legacy hut to the builder no longer fails. A hut placed with a right click got the path of its plan in the
