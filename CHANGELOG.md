@@ -11,6 +11,7 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   2 at level 2), and the heir never has more than 3 traits, so a full character drops a trait before adding one.
   Opposite traits cannot be added together. The changes are saved in the player's KubeJS data (`legacy_school`,
   e.g. `add:fort,drop:delicat`), which the modpack's script applies when a married character dies.
+  An unmarried character sees the window but cannot add or drop traits.
 - The traits the window lists come from the datapacks, one file per trait in `legacycolonies/traits/<trait>.json`
   (`label`, `description`, `opposites`).
 
