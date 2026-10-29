@@ -15,6 +15,10 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   of the next block, it takes them from the pile (a stack at a time) instead of asking for them. While it works from a
   pile it asks for no materials, and the requests it made before for items the pile holds are cancelled. Other
   workers and the builder's own dumps never put anything in the pile.
+- The builder builds with the pile's materials only. When it starts from the pile, everything it carries but its tools
+  goes to its stock. For each block, it may only use, of the pile's materials, items it took from the pile, not items
+  from its stock or that it dug up. If the work order needs more than it listed, the pile asks for the rest (message
+  to the players) and the builder waits for it.
 - When the building is done, what is left in the pile goes to the builder's stock and the pile disappears. If the work
   order goes away otherwise (cancelled, hut broken), the pile drops what it holds within 5 seconds and disappears.
   Players cannot break it.

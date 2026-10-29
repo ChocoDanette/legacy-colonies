@@ -38,6 +38,7 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
     private static final String TAG_REQUIRED   = "required";
     private static final String TAG_ITEM       = "item";
     private static final String TAG_COUNT      = "count";
+    private static final String TAG_CREDIT     = "credit";
     private static final String TAG_SIZE       = "size";
     private static final String TAG_INVENTORY  = "inventory";
     private static final String TAG_ANNOUNCED  = "announced";
@@ -52,6 +53,12 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
      * The materials of the work order, one count per item, in the order the builder lists them.
      */
     private final List<ItemStorage> required = new ArrayList<>();
+
+    /**
+     * Per material: how many the builder took from the pile and did not place yet. It may only place a material it
+     * took from the pile.
+     */
+    private final List<Integer> credits = new ArrayList<>();
 
     /**
      * True while the player puts materials in: any other insertion is refused.
@@ -78,12 +85,14 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         workOrderId = workOrder;
         buildingPos = builderPos;
         required.clear();
+        credits.clear();
         int slots = 0;
         for (final ItemStorage material : materials)
         {
             if (material.getAmount() > 0 && !material.getItemStack().isEmpty())
             {
                 required.add(new ItemStorage(material.getItemStack().copyWithCount(1), material.getAmount()));
+                credits.add(0);
                 slots += (material.getAmount() + material.getItemStack().getMaxStackSize() - 1) / material.getItemStack().getMaxStackSize();
             }
         }
@@ -170,6 +179,55 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         return started;
     }
 
+    /**
+     * The index of the pile's material this stack is, or -1 when the pile does not hold it.
+     */
+    public int indexOf(final ItemStack stack)
+    {
+        for (int i = 0; i < required.size(); i++)
+        {
+            if (matches(required.get(i), stack))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int stored(final int material)
+    {
+        return stored(required.get(material));
+    }
+
+    public int credit(final int material)
+    {
+        return credits.get(material);
+    }
+
+    public void addCredit(final int material, final int amount)
+    {
+        credits.set(material, Math.max(0, credits.get(material) + amount));
+        setChanged();
+    }
+
+    /**
+     * The work order needs more of a material than the builder listed: the pile asks for it too.
+     */
+    public void raise(final int material, final int amount)
+    {
+        final ItemStorage old = required.get(material);
+        required.set(material, new ItemStorage(old.getItemStack(), old.getAmount() + amount));
+        final int extraSlots = (amount + old.getItemStack().getMaxStackSize() - 1) / old.getItemStack().getMaxStackSize();
+        final ItemStackHandler grown = createInventory(inventory.getSlots() + extraSlots);
+        for (int slot = 0; slot < inventory.getSlots(); slot++)
+        {
+            ((PileInventory) grown).load(slot, inventory.getStackInSlot(slot));
+        }
+        inventory = grown;
+        updateBlockState();
+        setChanged();
+    }
+
     public boolean isComplete()
     {
         return missing().isEmpty();
@@ -240,11 +298,13 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         tag.putBoolean(TAG_ANNOUNCED, announced);
         tag.putBoolean(TAG_STARTED, started);
         final ListTag list = new ListTag();
-        for (final ItemStorage material : required)
+        for (int i = 0; i < required.size(); i++)
         {
+            final ItemStorage material = required.get(i);
             final CompoundTag entry = new CompoundTag();
             entry.put(TAG_ITEM, material.getItemStack().save(provider));
             entry.putInt(TAG_COUNT, material.getAmount());
+            entry.putInt(TAG_CREDIT, credits.get(i));
             list.add(entry);
         }
         tag.put(TAG_REQUIRED, list);
@@ -262,6 +322,7 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         announced = tag.getBoolean(TAG_ANNOUNCED);
         started = tag.getBoolean(TAG_STARTED);
         required.clear();
+        credits.clear();
         for (final Tag element : tag.getList(TAG_REQUIRED, Tag.TAG_COMPOUND))
         {
             final CompoundTag entry = (CompoundTag) element;
@@ -269,6 +330,7 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
             if (!stack.isEmpty())
             {
                 required.add(new ItemStorage(stack, entry.getInt(TAG_COUNT)));
+                credits.add(entry.getInt(TAG_CREDIT));
             }
         }
         inventory = createInventory(Math.max(1, tag.getInt(TAG_SIZE)));
@@ -434,6 +496,11 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
             {
                 super.setStackInSlot(slot, stack);
             }
+        }
+
+        void load(final int slot, final ItemStack stack)
+        {
+            stacks.set(slot, stack);
         }
 
         @Override

@@ -1,6 +1,7 @@
 package com.chocodanette.legacycolonies.pile;
 
 import com.chocodanette.legacycolonies.ModBlocks;
+import com.chocodanette.legacycolonies.colony.BuilderTools;
 import com.chocodanette.legacycolonies.mixin.AbstractEntityAIStructureAccessor;
 import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.IColonyManager;
@@ -105,6 +106,7 @@ public final class MaterialPiles
         if (!pile.isAnnounced())
         {
             pile.setAnnounced();
+            emptyInventory(ai, builder);
             MessageUtils.format(Component.translatable(KEY + "complete", workOrder.getDisplayName())).sendTo(builder.getColony()).forAllPlayers();
         }
         ai.getWorker().getCitizenData().setJobStatus(JobStatus.WORKING);
@@ -359,51 +361,173 @@ public final class MaterialPiles
     }
 
     /**
-     * Before the builder asks for the items of the next block: it takes them from its complete pile into its
-     * inventory (a stack at a time), so it never asks the player for what the pile holds. Requests it made before for
-     * these items are cancelled.
+     * Before the builder asks for the items of the next block: it takes them from its pile into its inventory (up to a
+     * stack), so it never asks the player for what the pile holds. Requests it made before for these items are
+     * cancelled.
      */
     public static void supply(final EntityAIStructureBuilder ai, final List<ItemStack> items)
     {
-        if (items.isEmpty() || !(ai.getWorker().getCitizenData().getWorkBuilding() instanceof AbstractBuildingStructureBuilder builder))
-        {
-            return;
-        }
-        final MaterialPileBlockEntity pile = completePile(builder);
+        final AbstractBuildingStructureBuilder builder = builderOf(ai);
+        final MaterialPileBlockEntity pile = builder == null ? null : completePile(builder);
         if (pile == null)
         {
             return;
         }
-        final IItemHandler worker = ai.getWorker().getInventoryCitizen();
-        final IItemHandler stock = pile.getInventory();
         for (final ItemStack wanted : items)
         {
-            if (wanted.isEmpty())
+            final int material = wanted.isEmpty() ? -1 : pile.indexOf(wanted);
+            if (material >= 0)
+            {
+                syncCredit(ai, pile, material, wanted);
+            }
+            if (material >= 0 && pile.credit(material) < wanted.getCount())
+            {
+                take(ai, pile, material, wanted, Math.max(wanted.getCount(), wanted.getMaxStackSize()) - pile.credit(material));
+                if (pile.credit(material) >= wanted.getCount())
+                {
+                    cancelRequests(builder, ai.getWorker().getCitizenData().getId(), wanted);
+                }
+            }
+        }
+    }
+
+    /**
+     * Before the builder places a block: it may only use, of the pile's materials, those it took from the pile (not
+     * its own stock, nor what it dug up). It takes what it lacks; if the pile has no more, the pile asks the player
+     * for the rest and the block waits.
+     *
+     * @return false when the block must wait.
+     */
+    public static boolean mayPlace(final EntityAIStructureBuilder ai, final List<ItemStack> items)
+    {
+        final AbstractBuildingStructureBuilder builder = builderOf(ai);
+        final MaterialPileBlockEntity pile = builder == null ? null : completePile(builder);
+        if (pile == null)
+        {
+            return true;
+        }
+        boolean mayPlace = true;
+        for (final ItemStack wanted : items)
+        {
+            final int material = wanted.isEmpty() ? -1 : pile.indexOf(wanted);
+            if (material >= 0)
+            {
+                syncCredit(ai, pile, material, wanted);
+            }
+            if (material < 0 || pile.credit(material) >= wanted.getCount())
             {
                 continue;
             }
-            final int have = count(worker, wanted);
-            int amount = Math.max(wanted.getCount(), wanted.getMaxStackSize()) - have;
-            for (int slot = 0; slot < stock.getSlots() && amount > 0; slot++)
+            take(ai, pile, material, wanted, Math.max(wanted.getCount(), wanted.getMaxStackSize()) - pile.credit(material));
+            final int lacking = wanted.getCount() - pile.credit(material);
+            if (lacking <= 0)
             {
-                if (!ItemStackUtils.compareItemStacksIgnoreStackSize(wanted, stock.getStackInSlot(slot), true, true))
-                {
-                    continue;
-                }
-                final ItemStack simulated = stock.extractItem(slot, amount, true);
-                final int fits = simulated.getCount() - ItemHandlerHelper.insertItemStacked(worker, simulated, true).getCount();
-                if (fits <= 0)
-                {
-                    break;
-                }
-                ItemHandlerHelper.insertItemStacked(worker, stock.extractItem(slot, fits, false), false);
-                amount -= fits;
+                continue;
             }
-            if (count(worker, wanted) >= wanted.getCount())
+            mayPlace = false;
+            if (pile.stored(material) == 0)
             {
-                cancelRequests(builder, ai.getWorker().getCitizenData().getId(), wanted);
+                pile.raise(material, lacking);
+                final BlockPos pos = pile.getBlockPos();
+                MessageUtils.format(Component.translatable(KEY + "more", lacking, wanted.getHoverName(), pos.getX(), pos.getY(), pos.getZ()))
+                  .sendTo(builder.getColony())
+                  .forAllPlayers();
             }
         }
+        return mayPlace;
+    }
+
+    /**
+     * When the builder used items to place a block: the pile's materials among them are no longer owed to it.
+     */
+    public static void onConsume(final EntityAIStructureBuilder ai, final List<ItemStack> items)
+    {
+        final AbstractBuildingStructureBuilder builder = builderOf(ai);
+        final MaterialPileBlockEntity pile = builder == null ? null : completePile(builder);
+        if (pile == null)
+        {
+            return;
+        }
+        for (final ItemStack used : items)
+        {
+            final int material = used.isEmpty() ? -1 : pile.indexOf(used);
+            if (material >= 0)
+            {
+                pile.addCredit(material, -used.getCount());
+            }
+        }
+    }
+
+    /**
+     * What the builder took from the pile and no longer carries (put away in its stock) is no longer owed to it.
+     */
+    private static void syncCredit(final EntityAIStructureBuilder ai, final MaterialPileBlockEntity pile, final int material, final ItemStack like)
+    {
+        final int carried = count(ai.getWorker().getInventoryCitizen(), like);
+        if (pile.credit(material) > carried)
+        {
+            pile.addCredit(material, carried - pile.credit(material));
+        }
+    }
+
+    /**
+     * Moves up to {@code amount} of a material from the pile to the builder's inventory, owed to it.
+     */
+    private static void take(final EntityAIStructureBuilder ai, final MaterialPileBlockEntity pile, final int material, final ItemStack like, final int amount)
+    {
+        final IItemHandler worker = ai.getWorker().getInventoryCitizen();
+        final IItemHandler stock = pile.getInventory();
+        int left = amount;
+        for (int slot = 0; slot < stock.getSlots() && left > 0; slot++)
+        {
+            if (!ItemStackUtils.compareItemStacksIgnoreStackSize(like, stock.getStackInSlot(slot), true, true))
+            {
+                continue;
+            }
+            final ItemStack simulated = stock.extractItem(slot, left, true);
+            final int fits = simulated.getCount() - ItemHandlerHelper.insertItemStacked(worker, simulated, true).getCount();
+            if (fits <= 0)
+            {
+                break;
+            }
+            ItemHandlerHelper.insertItemStacked(worker, stock.extractItem(slot, fits, false), false);
+            pile.addCredit(material, fits);
+            left -= fits;
+        }
+    }
+
+    /**
+     * When the builder starts from its pile, everything it carries but its tools goes to its stock: it builds with the
+     * pile's materials only.
+     */
+    private static void emptyInventory(final EntityAIStructureBuilder ai, final AbstractBuildingStructureBuilder builder)
+    {
+        final AbstractTileEntityColonyBuilding hut = builder.getTileEntity();
+        if (hut == null)
+        {
+            return;
+        }
+        final IItemHandler worker = ai.getWorker().getInventoryCitizen();
+        for (int slot = 0; slot < worker.getSlots(); slot++)
+        {
+            final ItemStack stack = worker.getStackInSlot(slot);
+            if (stack.isEmpty() || BuilderTools.isTool(stack))
+            {
+                continue;
+            }
+            final ItemStack simulated = worker.extractItem(slot, stack.getCount(), true);
+            final int fits = simulated.getCount() - ItemHandlerHelper.insertItemStacked(hut.getInventory(), simulated, true).getCount();
+            if (fits > 0)
+            {
+                ItemHandlerHelper.insertItemStacked(hut.getInventory(), worker.extractItem(slot, fits, false), false);
+            }
+        }
+    }
+
+    @Nullable
+    private static AbstractBuildingStructureBuilder builderOf(final EntityAIStructureBuilder ai)
+    {
+        return ai.getWorker().getCitizenData().getWorkBuilding() instanceof AbstractBuildingStructureBuilder builder ? builder : null;
     }
 
     private static int count(final IItemHandler handler, final ItemStack like)

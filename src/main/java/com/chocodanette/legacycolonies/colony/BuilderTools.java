@@ -167,6 +167,25 @@ public final class BuilderTools extends SimpleJsonResourceReloadListener
     }
 
     /**
+     * Whether the stack is one of the builder's tools (or any other tool that wears), which it keeps on itself.
+     */
+    public static boolean isTool(final ItemStack stack)
+    {
+        if (stack.isDamageableItem())
+        {
+            return true;
+        }
+        for (final Tool tool : INSTANCE.tools)
+        {
+            if (stack.is(tool.items()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * The inventory slot of the fastest tool of this kind, or -1.
      */
     public static int bestSlot(final InventoryCitizen inventory, final Tool tool)
