@@ -11,6 +11,7 @@
     "BlueprintAccessor",
     "CitizenDataMixin",
     "CitizenDiseaseHandlerMixin",
+    "CitizenHappinessHandlerMixin",
     "CitizenManagerMixin",
     "CitizenMournHandlerMixin",
     "ReproductionManagerMixin",

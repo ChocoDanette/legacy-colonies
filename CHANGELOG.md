@@ -10,8 +10,13 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   potato…) do not exist with TFC.
 - A hurt citizen no longer leaves work to look for a hospital.
 - No mourning: when a citizen dies, the others keep working.
-- No complaints from citizens (no bed, hungry, no job…). Item requests stay, as the builder asks for its materials
-  through them, and so do the builder's own messages.
+- No complaints from citizens (no bed, hungry, no job, need barracks…). Item requests stay, as the builder asks for its
+  materials through them, and so do the builder's own messages. Complaints saved before are dropped when the citizen
+  loads.
+- No MineColonies hunger: citizens stay full and never look for food. From the iron age, the Legacy rations feed the
+  colony.
+- Happiness only counts the bed, sleep, the Legacy rations, damage, deaths and quests. The MineColonies needs for
+  barracks (security), tavern (social), mystical site, school, food variety, jobs and health are removed.
 
 ## 0.9.0
 
