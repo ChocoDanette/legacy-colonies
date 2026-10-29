@@ -9,7 +9,10 @@
     "AbstractSchematicProviderMixin",
     "AbstractWorkOrderMixin",
     "BlueprintAccessor",
+    "CitizenDataMixin",
+    "CitizenDiseaseHandlerMixin",
     "CitizenManagerMixin",
+    "CitizenMournHandlerMixin",
     "ReproductionManagerMixin",
     "StructurePlacerMixin",
     "WorkOrderBuildingMixin"

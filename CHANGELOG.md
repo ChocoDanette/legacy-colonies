@@ -4,6 +4,15 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.9.1
+
+- No diseases: citizens never get sick, and a citizen already sick is cured. The MineColonies cures (vanilla carrot,
+  potato…) do not exist with TFC.
+- A hurt citizen no longer leaves work to look for a hospital.
+- No mourning: when a citizen dies, the others keep working.
+- No complaints from citizens (no bed, hungry, no job…). Item requests stay, as the builder asks for its materials
+  through them, and so do the builder's own messages.
+
 ## 0.9.0
 
 - New hut without a worker: the school (`legacycolonies:school`), with the MineColonies school model. Level 1 needs a
