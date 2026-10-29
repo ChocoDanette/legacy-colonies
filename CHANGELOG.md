@@ -4,6 +4,12 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.12.1
+
+- The colony campfire becomes the colony hearth ("Foyer de colonie"): it looks like a lit TFC firepit and its outline
+  is as low as one. The id stays `legacycolonies:colony_campfire`, so worlds, blueprints (`colony_campfire1`) and
+  scripts keep working. The modpack makes it by right clicking a TFC firepit with the TFC field guide.
+
 ## 0.12.0
 
 - Material pile. When the builder starts a work order (build, upgrade, repair), a material pile

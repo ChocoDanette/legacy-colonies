@@ -1,6 +1,6 @@
 {
   "block.legacycolonies.builder_post": "Poste du bâtisseur",
-  "block.legacycolonies.colony_campfire": "Feu de camp de colonie",
+  "block.legacycolonies.colony_campfire": "Foyer de colonie",
   "block.legacycolonies.forge": "Forge",
   "block.legacycolonies.granary": "Grenier",
   "block.legacycolonies.house": "Maison",
@@ -10,8 +10,8 @@
   "block.legacycolonies.stable": "Étable",
   "block.legacycolonies.warehouse": "Entrepôt",
   "com.legacycolonies.building.builder_post": "Poste du bâtisseur",
-  "com.legacycolonies.building.builder_post.desc": "Là où travaille le bâtisseur. Posé au-dessus du feu de camp de colonie.",
-  "com.legacycolonies.building.colony_campfire": "Feu de camp de colonie",
+  "com.legacycolonies.building.builder_post.desc": "Là où travaille le bâtisseur. Posé au-dessus du foyer de colonie.",
+  "com.legacycolonies.building.colony_campfire": "Foyer de colonie",
   "com.legacycolonies.building.colony_campfire.desc": "Fonde la colonie et en marque le centre.",
   "com.legacycolonies.building.forge": "Forge",
   "com.legacycolonies.building.forge.desc": "Là où le joueur travaille le métal, avec une forge TFC et une enclume.",
