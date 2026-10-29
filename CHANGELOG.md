@@ -4,6 +4,28 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.9.1
+
+- No diseases: citizens never get sick, and a citizen already sick is cured. The MineColonies cures (vanilla carrot,
+  potato…) do not exist with TFC.
+- A hurt citizen no longer leaves work to look for a hospital.
+- No mourning: when a citizen dies, the others keep working.
+- No complaints from citizens (no bed, hungry, no job, need barracks…). Item requests stay, as the builder asks for its
+  materials through them, and so do the builder's own messages and the quests. Complaints saved before are dropped
+  when the citizen loads. A quest waiting on a dialogue opens it again when the world loads, as an earlier test build
+  of 0.9.1 dropped them.
+- No MineColonies hunger: citizens stay full and never look for food. From the iron age, the Legacy rations feed the
+  colony.
+- Happiness only counts the bed, sleep, the Legacy rations, damage, deaths and quests. The MineColonies needs for
+  barracks (security), tavern (social), mystical site, school, food variety, jobs and health are removed.
+
+## 0.9.0
+
+- New hut without a worker: the school (`legacycolonies:school`), with the MineColonies school model. Level 1 needs a
+  lectern and 2 bookshelves, level 2 a lectern and 4 bookshelves (TFC wood or vanilla). A colony may build one: level 1
+  from the copper age, level 2 from the iron age. The modpack uses its level to let the player choose the traits of the
+  heir.
+
 ## 0.8.3
 
 - Beds no longer get lost. When a citizen goes to sleep, MineColonies forgets a registered bed that is not in the

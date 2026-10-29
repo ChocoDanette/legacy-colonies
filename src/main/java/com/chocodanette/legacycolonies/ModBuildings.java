@@ -6,6 +6,7 @@ import com.chocodanette.legacycolonies.block.BlockForge;
 import com.chocodanette.legacycolonies.block.BlockGranary;
 import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
+import com.chocodanette.legacycolonies.block.BlockSchool;
 import com.chocodanette.legacycolonies.block.BlockStable;
 import com.chocodanette.legacycolonies.block.BlockWarehouse;
 import com.chocodanette.legacycolonies.building.BuildingBuilderPost;
@@ -139,6 +140,17 @@ public final class ModBuildings
       .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockWarehouse.NAME, 5))
       .setBuildingViewProducer(() -> EmptyView::new)
       .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockWarehouse.NAME))
+      .addBuildingModuleProducer(STATS_MODULE)
+      .createBuildingEntry());
+
+    /**
+     * The school: its level is how many traits the player may choose to pass on to the heir, or keep from them. No worker.
+     */
+    public static final DeferredHolder<BuildingEntry, BuildingEntry> SCHOOL = BUILDINGS.register(BlockSchool.NAME, () -> new BuildingEntry.Builder()
+      .setBuildingBlock(ModBlocks.SCHOOL.get())
+      .setBuildingProducer((colony, pos) -> new DefaultBuildingInstance(colony, pos, BlockSchool.NAME, 5))
+      .setBuildingViewProducer(() -> EmptyView::new)
+      .setRegistryName(ResourceLocation.fromNamespaceAndPath(LegacyColonies.MOD_ID, BlockSchool.NAME))
       .addBuildingModuleProducer(STATS_MODULE)
       .createBuildingEntry());
 
