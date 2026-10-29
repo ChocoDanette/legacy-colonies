@@ -2,13 +2,18 @@ package com.chocodanette.legacycolonies.pile;
 
 import com.chocodanette.legacycolonies.ModBlocks;
 import com.chocodanette.legacycolonies.mixin.AbstractEntityAIStructureAccessor;
+import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.colony.buildings.IBuilding;
 import com.minecolonies.api.colony.workorders.IBuilderWorkOrder;
+import com.minecolonies.api.colony.requestsystem.request.IRequest;
+import com.minecolonies.api.colony.requestsystem.request.RequestState;
+import com.minecolonies.api.colony.requestsystem.requestable.IDeliverable;
 import com.minecolonies.api.colony.workorders.WorkOrderType;
 import com.minecolonies.api.crafting.ItemStorage;
 import com.minecolonies.api.entity.ai.JobStatus;
 import com.minecolonies.api.tileentities.AbstractTileEntityColonyBuilding;
+import com.minecolonies.api.util.ItemStackUtils;
 import com.minecolonies.api.util.MessageUtils;
 import com.minecolonies.core.colony.buildings.AbstractBuildingStructureBuilder;
 import com.minecolonies.core.entity.ai.workers.builder.EntityAIStructureBuilder;
@@ -26,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +97,7 @@ public final class MaterialPiles
               .forAllPlayers();
             return false;
         }
-        if (!pile.isComplete())
+        if (!pile.isReady())
         {
             ai.getWorker().getCitizenData().setJobStatus(JobStatus.STUCK);
             return false;
@@ -293,6 +299,22 @@ public final class MaterialPiles
               && builder.hasWorkOrder()
               && builder.getWorkOrder().getID() == pile.getWorkOrderId())
         {
+            if (pile.isReady())
+            {
+                // What the builder asked for that the pile holds (asked before the pile was ready, or before 0.12.0):
+                // it would wait for those requests forever.
+                for (final ICitizenData citizen : builder.getAllAssignedCitizen())
+                {
+                    for (int slot = 0; slot < pile.getInventory().getSlots(); slot++)
+                    {
+                        final ItemStack stored = pile.getInventory().getStackInSlot(slot);
+                        if (!stored.isEmpty())
+                        {
+                            cancelRequests(builder, citizen.getId(), stored);
+                        }
+                    }
+                }
+            }
             return true;
         }
         if (building == null && IColonyManager.getInstance().getColonyByWorld(pile.getColonyId(), level) != null
@@ -318,5 +340,101 @@ public final class MaterialPiles
             builder.markDirty();
         }
         level.removeBlock(pos, false);
+    }
+
+    /**
+     * The pile of the builder's current work order once it was complete (the builder then takes from it), if any.
+     */
+    @Nullable
+    public static MaterialPileBlockEntity completePile(final AbstractBuildingStructureBuilder builder)
+    {
+        final IBuilderWorkOrder workOrder = builder.getWorkOrder();
+        final Level level = builder.getColony().getWorld();
+        if (workOrder == null || level == null)
+        {
+            return null;
+        }
+        final MaterialPileBlockEntity pile = find(level, builder, workOrder.getID());
+        return pile != null && pile.isReady() ? pile : null;
+    }
+
+    /**
+     * Before the builder asks for the items of the next block: it takes them from its complete pile into its
+     * inventory (a stack at a time), so it never asks the player for what the pile holds. Requests it made before for
+     * these items are cancelled.
+     */
+    public static void supply(final EntityAIStructureBuilder ai, final List<ItemStack> items)
+    {
+        if (items.isEmpty() || !(ai.getWorker().getCitizenData().getWorkBuilding() instanceof AbstractBuildingStructureBuilder builder))
+        {
+            return;
+        }
+        final MaterialPileBlockEntity pile = completePile(builder);
+        if (pile == null)
+        {
+            return;
+        }
+        final IItemHandler worker = ai.getWorker().getInventoryCitizen();
+        final IItemHandler stock = pile.getInventory();
+        for (final ItemStack wanted : items)
+        {
+            if (wanted.isEmpty())
+            {
+                continue;
+            }
+            final int have = count(worker, wanted);
+            int amount = Math.max(wanted.getCount(), wanted.getMaxStackSize()) - have;
+            for (int slot = 0; slot < stock.getSlots() && amount > 0; slot++)
+            {
+                if (!ItemStackUtils.compareItemStacksIgnoreStackSize(wanted, stock.getStackInSlot(slot), true, true))
+                {
+                    continue;
+                }
+                final ItemStack simulated = stock.extractItem(slot, amount, true);
+                final int fits = simulated.getCount() - ItemHandlerHelper.insertItemStacked(worker, simulated, true).getCount();
+                if (fits <= 0)
+                {
+                    break;
+                }
+                ItemHandlerHelper.insertItemStacked(worker, stock.extractItem(slot, fits, false), false);
+                amount -= fits;
+            }
+            if (count(worker, wanted) >= wanted.getCount())
+            {
+                cancelRequests(builder, ai.getWorker().getCitizenData().getId(), wanted);
+            }
+        }
+    }
+
+    private static int count(final IItemHandler handler, final ItemStack like)
+    {
+        int count = 0;
+        for (int slot = 0; slot < handler.getSlots(); slot++)
+        {
+            final ItemStack stack = handler.getStackInSlot(slot);
+            if (ItemStackUtils.compareItemStacksIgnoreStackSize(like, stack, true, true))
+            {
+                count += stack.getCount();
+            }
+        }
+        return count;
+    }
+
+    private static void cancelRequests(final AbstractBuildingStructureBuilder builder, final int citizenId, final ItemStack stack)
+    {
+        final List<IRequest<?>> requests = new ArrayList<>(builder.getOpenRequestsOfCitizenOrBuilding(
+          citizenId,
+          request -> request.getRequest() instanceof IDeliverable deliverable && deliverable.matches(stack)));
+        for (final IRequest<?> request : requests)
+        {
+            try
+            {
+                builder.getColony().getRequestManager().updateRequestState(request.getId(), RequestState.CANCELLED);
+            }
+            catch (final IllegalArgumentException e)
+            {
+                // Already gone.
+            }
+        }
     }
 }

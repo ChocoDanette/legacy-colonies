@@ -11,8 +11,10 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
   as can be, and the players of the colony get a message. It holds exactly the materials the builder listed for the
   work order: right click with an item puts it in (never more than needed), crouching puts in every needed item of the
   inventory, an empty hand lists what is missing. The pile grows as it fills.
-- The builder waits until the pile is complete, then starts and takes its materials from it, as from a rack of its
-  post. Other workers and the builder's own dumps never put anything in it.
+- The builder waits until the pile is complete, then starts and takes its materials from it: when it needs the items
+  of the next block, it takes them from the pile (a stack at a time) instead of asking for them. While it works from a
+  pile it asks for no materials, and the requests it made before for items the pile holds are cancelled. Other
+  workers and the builder's own dumps never put anything in the pile.
 - When the building is done, what is left in the pile goes to the builder's stock and the pile disappears. If the work
   order goes away otherwise (cancelled, hut broken), the pile drops what it holds within 5 seconds and disappears.
   Players cannot break it.

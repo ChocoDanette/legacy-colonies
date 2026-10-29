@@ -6,12 +6,15 @@ import com.minecolonies.api.entity.ai.statemachine.states.AIWorkerState;
 import com.minecolonies.api.entity.ai.statemachine.states.IAIState;
 import com.minecolonies.core.entity.ai.workers.AbstractEntityAIStructure;
 import com.minecolonies.core.entity.ai.workers.builder.EntityAIStructureBuilder;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 /**
  * After placing a block, the builder waits less with a tool for that block (see {@link BuilderTools}). And it only
@@ -38,6 +41,19 @@ public abstract class AbstractEntityAIStructureMixin
         if ((Object) this instanceof EntityAIStructureBuilder builder && !MaterialPiles.mayStart(builder))
         {
             cir.setReturnValue(AIWorkerState.LOAD_STRUCTURE);
+        }
+    }
+
+    @Inject(method = "hasListOfResInInvOrRequest", at = @At("HEAD"))
+    private static void legacycolonies$takeFromPile(
+      final AbstractEntityAIStructure<?, ?> placer,
+      final List<ItemStack> itemList,
+      final boolean force,
+      final CallbackInfoReturnable<?> cir)
+    {
+        if (placer instanceof EntityAIStructureBuilder builder)
+        {
+            MaterialPiles.supply(builder, itemList);
         }
     }
 }

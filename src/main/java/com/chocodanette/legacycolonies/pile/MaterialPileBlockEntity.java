@@ -41,10 +41,12 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
     private static final String TAG_SIZE       = "size";
     private static final String TAG_INVENTORY  = "inventory";
     private static final String TAG_ANNOUNCED  = "announced";
+    private static final String TAG_STARTED    = "started";
 
     private int     colonyId;
     private int     workOrderId;
     private boolean announced;
+    private boolean started;
 
     /**
      * The materials of the work order, one count per item, in the order the builder lists them.
@@ -155,6 +157,19 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         return missing;
     }
 
+    /**
+     * Whether the builder may work from the pile: it is complete, or was once (the builder then takes from it).
+     */
+    public boolean isReady()
+    {
+        if (!started && isComplete())
+        {
+            started = true;
+            setChanged();
+        }
+        return started;
+    }
+
     public boolean isComplete()
     {
         return missing().isEmpty();
@@ -223,6 +238,7 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         tag.putInt(TAG_WORK_ORDER, workOrderId);
         tag.putLong("building", buildingPos.asLong());
         tag.putBoolean(TAG_ANNOUNCED, announced);
+        tag.putBoolean(TAG_STARTED, started);
         final ListTag list = new ListTag();
         for (final ItemStorage material : required)
         {
@@ -244,6 +260,7 @@ public class MaterialPileBlockEntity extends AbstractTileEntityRack
         workOrderId = tag.getInt(TAG_WORK_ORDER);
         buildingPos = BlockPos.of(tag.getLong("building"));
         announced = tag.getBoolean(TAG_ANNOUNCED);
+        started = tag.getBoolean(TAG_STARTED);
         required.clear();
         for (final Tag element : tag.getList(TAG_REQUIRED, Tag.TAG_COMPOUND))
         {
