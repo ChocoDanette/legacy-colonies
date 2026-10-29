@@ -4,6 +4,7 @@ import com.chocodanette.legacycolonies.colony.BuildModeHandler;
 import com.chocodanette.legacycolonies.colony.BuilderTools;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
+import com.chocodanette.legacycolonies.colony.HearthConversionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
 import com.chocodanette.legacycolonies.compat.BaseItemsPlacementHandler;
 import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
@@ -68,6 +69,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
         NeoForge.EVENT_BUS.register(BuildModeHandler.class);
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(HearthConversionHandler.class);
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
         NeoForge.EVENT_BUS.register(TraitCatalog.class);

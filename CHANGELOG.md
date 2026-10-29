@@ -6,9 +6,12 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 
 ## 0.12.1
 
-- The colony campfire becomes the colony hearth ("Foyer de colonie"): it looks like a lit TFC firepit and its outline
-  is as low as one. The id stays `legacycolonies:colony_campfire`, so worlds, blueprints (`colony_campfire1`) and
-  scripts keep working. The modpack makes it by right clicking a TFC firepit with the TFC field guide.
+- The colony campfire becomes the colony hearth ("Foyer de colonie"): it looks like a lit TFC firepit, gives light,
+  and its outline is as low as a firepit. The id stays `legacycolonies:colony_campfire`, so worlds, blueprints
+  (`colony_campfire1`) and scripts keep working. The modpack adds its heat (Cold Sweat) and its pollution.
+- The colony hearth is no longer an item to craft: right click a TFC firepit with the TFC field guide and the firepit
+  turns into the colony hearth in place and founds the colony (the firepit drops what it holds, the guide is used up).
+  Refused inside a colony and for a player who already owns one.
 
 ## 0.12.0
 

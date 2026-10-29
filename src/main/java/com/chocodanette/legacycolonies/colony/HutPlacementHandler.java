@@ -100,6 +100,20 @@ public final class HutPlacementHandler
             return;
         }
 
+        placeHut(level, pos, player, hutBlock, colony, stack);
+        if (!player.isCreative())
+        {
+            stack.shrink(1);
+        }
+    }
+
+    /**
+     * Places the hut block at {@code pos}, with its Legacy blueprint, and lets MineColonies create the building (or found the
+     * colony for the colony hearth). Server side; the caller checks permissions and the era.
+     */
+    public static void placeHut(final Level level, final BlockPos pos, final Player player, final AbstractBlockHut<?> hutBlock,
+      @Nullable final IColony colony, final ItemStack stack)
+    {
         final BlockState state = hutBlock.defaultBlockState().setValue(AbstractBlockHut.FACING, player.getDirection());
         level.setBlockAndUpdate(pos, state);
         final StructurePackMeta pack = packFor(colony);
@@ -131,10 +145,6 @@ public final class HutPlacementHandler
               }));
         }
         state.getBlock().setPlacedBy(level, pos, state, player, stack);
-        if (!player.isCreative())
-        {
-            stack.shrink(1);
-        }
     }
 
     @Nullable
