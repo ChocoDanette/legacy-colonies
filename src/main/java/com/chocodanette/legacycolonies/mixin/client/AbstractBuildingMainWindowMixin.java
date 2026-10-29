@@ -1,8 +1,10 @@
 package com.chocodanette.legacycolonies.mixin.client;
 
+import com.chocodanette.legacycolonies.ModBuildings;
 import com.chocodanette.legacycolonies.colony.BuildMode;
 import com.chocodanette.legacycolonies.colony.ClientBuildModes;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
+import com.chocodanette.legacycolonies.network.SchoolOpenPayload;
 import com.chocodanette.legacycolonies.validation.ClientBuildingRules;
 import com.ldtteam.blockui.Pane;
 import com.ldtteam.blockui.controls.Button;
@@ -25,23 +27,34 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Adds a "confirm building" button next to the hut's build button when the hut's next level can be built by hand.
  * Once the hut has a build mode, only its button stays: a hut given to the builder loses "confirm building", a hut built
  * by hand loses the build button (and takes its place).
+ * A built school also gets an "heir" button, which opens its heir window.
  */
 @Mixin(value = AbstractBuildingMainWindow.class, remap = false)
 public abstract class AbstractBuildingMainWindowMixin
 {
     private static final String CONFIRM_ID = "legacycolonies_confirm";
+    private static final String HEIR_ID = "legacycolonies_heir";
 
     @Shadow
     @Final
     private Button buttonBuild;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void legacycolonies$addConfirmButton(final IBuildingView buildingView, final ResourceLocation resource, final CallbackInfo ci)
+    private void legacycolonies$addButtons(final IBuildingView buildingView, final ResourceLocation resource, final CallbackInfo ci)
     {
         if (buttonBuild == null || buttonBuild.getParent() == null)
         {
             return;
         }
+        legacycolonies$addConfirmButton(buildingView);
+        if (buildingView.getBuildingType() == ModBuildings.SCHOOL.get() && buildingView.getBuildingLevel() >= 1)
+        {
+            legacycolonies$addHeirButton(buildingView);
+        }
+    }
+
+    private void legacycolonies$addConfirmButton(final IBuildingView buildingView)
+    {
         final BuildMode mode = ClientBuildModes.getMode(buildingView.getPosition());
         if (mode == BuildMode.HAND)
         {
@@ -57,14 +70,7 @@ public abstract class AbstractBuildingMainWindowMixin
         }
 
         final View parent = buttonBuild.getParent();
-        final ButtonImage confirm = new ButtonImage();
-        confirm.setID(CONFIRM_ID);
-        confirm.setImage(ResourceLocation.fromNamespaceAndPath("minecolonies", "textures/gui/builderhut/builder_button_medium_large.png"));
-        confirm.setSize(buttonBuild.getWidth(), buttonBuild.getHeight());
-        // A button made in code starts with a zero-sized text box, which setSize only scales: give the text the whole button.
-        confirm.setTextRenderBox(buttonBuild.getWidth(), buttonBuild.getHeight());
-        confirm.setColors(0);
-        confirm.setText(Component.translatable("com.legacycolonies.confirm.button"));
+        final ButtonImage confirm = legacycolonies$newButton(CONFIRM_ID, Component.translatable("com.legacycolonies.confirm.button"));
         confirm.setPosition(buttonBuild.getX(), mode == BuildMode.HAND ? buttonBuild.getY() : freeRow(parent, buttonBuild));
         parent.addChild(confirm);
 
@@ -72,6 +78,35 @@ public abstract class AbstractBuildingMainWindowMixin
             PacketDistributor.sendToServer(new ConfirmBuildingPayload(buildingView.getPosition()));
             ((AbstractWindowSkeleton) (Object) this).close();
         });
+    }
+
+    private void legacycolonies$addHeirButton(final IBuildingView buildingView)
+    {
+        final View parent = buttonBuild.getParent();
+        final ButtonImage heir = legacycolonies$newButton(HEIR_ID, Component.translatable("com.legacycolonies.school.button"));
+        heir.setPosition(buttonBuild.getX(), freeRow(parent, buttonBuild));
+        parent.addChild(heir);
+
+        ((AbstractWindowSkeleton) (Object) this).registerButton(HEIR_ID, () -> {
+            ((AbstractWindowSkeleton) (Object) this).close();
+            PacketDistributor.sendToServer(new SchoolOpenPayload(buildingView.getPosition()));
+        });
+    }
+
+    /**
+     * A button the size of the build button.
+     */
+    private ButtonImage legacycolonies$newButton(final String id, final Component text)
+    {
+        final ButtonImage button = new ButtonImage();
+        button.setID(id);
+        button.setImage(ResourceLocation.fromNamespaceAndPath("minecolonies", "textures/gui/builderhut/builder_button_medium_large.png"));
+        button.setSize(buttonBuild.getWidth(), buttonBuild.getHeight());
+        // A button made in code starts with a zero-sized text box, which setSize only scales: give the text the whole button.
+        button.setTextRenderBox(buttonBuild.getWidth(), buttonBuild.getHeight());
+        button.setColors(0);
+        button.setText(text);
+        return button;
     }
 
     /**
