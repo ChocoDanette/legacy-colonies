@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * The school's heir window: each level of the school lets the player make one change to the traits of their heir, add a
  * trait or drop one of theirs. The heir never has more than {@link #MAX_TRAITS} traits, so a full character drops one
- * before adding one. The modpack's KubeJS script applies the changes when a married character dies.
+ * before adding one. The modpack's KubeJS script applies the changes when a married character dies, so only a married character can make new ones.
  */
 public final class HeirSchool
 {
@@ -65,10 +65,11 @@ public final class HeirSchool
         final List<String> current = CharacterData.traits(data);
         final List<String> added = CharacterData.added(data);
         final List<String> dropped = CharacterData.dropped(data);
+        final boolean married = data.contains(CharacterData.SPOUSE);
         final boolean allowed = switch (change)
         {
-            case ADD -> canAdd(trait, level, current, added, dropped);
-            case DROP -> canDrop(trait, level, current, added, dropped);
+            case ADD -> married && canAdd(trait, level, current, added, dropped);
+            case DROP -> married && canDrop(trait, level, current, added, dropped);
             case CANCEL -> added.contains(trait) || dropped.contains(trait) && canRestore(trait, current, added, dropped);
         };
         if (allowed)
@@ -114,12 +115,14 @@ public final class HeirSchool
         final List<String> current = CharacterData.traits(data);
         final List<String> added = CharacterData.added(data);
         final List<String> dropped = CharacterData.dropped(data);
+        // Only a married character has an heir, so an unmarried one can only cancel earlier choices.
+        final boolean married = data.contains(CharacterData.SPOUSE);
 
         final List<TraitRow> currentRows = new ArrayList<>();
         for (final String trait : current)
         {
             final boolean chosen = dropped.contains(trait);
-            final boolean available = chosen ? canRestore(trait, current, added, dropped) : canDrop(trait, level, current, added, dropped);
+            final boolean available = chosen ? canRestore(trait, current, added, dropped) : married && canDrop(trait, level, current, added, dropped);
             currentRows.add(row(trait, chosen, available));
         }
         final List<TraitRow> otherRows = new ArrayList<>();
@@ -128,7 +131,7 @@ public final class HeirSchool
             if (!current.contains(trait))
             {
                 final boolean chosen = added.contains(trait);
-                otherRows.add(row(trait, chosen, chosen || canAdd(trait, level, current, added, dropped)));
+                otherRows.add(row(trait, chosen, chosen || married && canAdd(trait, level, current, added, dropped)));
             }
         }
         return new SchoolPlanPayload(hut, level, added.size() + dropped.size(), data.getString(CharacterData.FIRST_NAME),
