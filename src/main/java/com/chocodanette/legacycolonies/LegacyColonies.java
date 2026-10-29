@@ -4,6 +4,7 @@ import com.chocodanette.legacycolonies.colony.BuildModeHandler;
 import com.chocodanette.legacycolonies.colony.BuilderTools;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
+import com.chocodanette.legacycolonies.colony.HearthConversionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
 import com.chocodanette.legacycolonies.compat.BaseItemsPlacementHandler;
 import com.chocodanette.legacycolonies.compat.CharcoalForgePlacementHandler;
@@ -20,6 +21,8 @@ import com.chocodanette.legacycolonies.needs.NeedsCommand;
 import com.chocodanette.legacycolonies.network.BuildModesPayload;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
+import com.chocodanette.legacycolonies.network.FirepitFoundingPayload;
+import com.chocodanette.legacycolonies.network.FoundColonyPayload;
 import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
 import com.chocodanette.legacycolonies.network.SchoolChangePayload;
 import com.chocodanette.legacycolonies.network.SchoolOpenPayload;
@@ -68,6 +71,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(MaterialChoiceHandler.class);
         NeoForge.EVENT_BUS.register(BuildModeHandler.class);
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(HearthConversionHandler.class);
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
         NeoForge.EVENT_BUS.register(TraitCatalog.class);
@@ -127,9 +131,11 @@ public class LegacyColonies
           .playToClient(BuildModesPayload.TYPE, BuildModesPayload.STREAM_CODEC, BuildModesPayload::handle)
           .playToClient(BuildingRulesPayload.TYPE, BuildingRulesPayload.STREAM_CODEC, BuildingRulesPayload::handle)
           .playToClient(SchoolPlanPayload.TYPE, SchoolPlanPayload.STREAM_CODEC, SchoolPlanPayload::handle)
+          .playToClient(FirepitFoundingPayload.TYPE, FirepitFoundingPayload.STREAM_CODEC, FirepitFoundingPayload::handle)
           .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle)
           .playToServer(SchoolOpenPayload.TYPE, SchoolOpenPayload.STREAM_CODEC, SchoolOpenPayload::handle)
-          .playToServer(SchoolChangePayload.TYPE, SchoolChangePayload.STREAM_CODEC, SchoolChangePayload::handle);
+          .playToServer(SchoolChangePayload.TYPE, SchoolChangePayload.STREAM_CODEC, SchoolChangePayload::handle)
+          .playToServer(FoundColonyPayload.TYPE, FoundColonyPayload.STREAM_CODEC, FoundColonyPayload::handle);
     }
 
     private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)

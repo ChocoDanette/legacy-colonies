@@ -4,6 +4,15 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.12.1
+
+- The colony campfire becomes the colony hearth ("Foyer de colonie"): it looks like a lit TFC firepit, gives light,
+  and its outline is as low as a firepit. The id stays `legacycolonies:colony_campfire`, so worlds, blueprints
+  (`colony_campfire1`) and scripts keep working. The modpack adds its heat (Cold Sweat) and its pollution.
+- The colony hearth is no longer an item to craft. The window of a TFC firepit shows a "Found a colony here" button
+  when the player owns no colony and the firepit is outside every colony; after a confirmation, the firepit drops what
+  it holds and turns into the colony hearth in place, which founds the colony.
+
 ## 0.12.0
 
 - Material pile. When the builder starts a work order (build, upgrade, repair), a material pile

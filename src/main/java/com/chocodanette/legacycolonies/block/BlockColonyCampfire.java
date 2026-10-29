@@ -16,14 +16,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Colony campfire: founds the colony and is its centre. Extends the town hall block, because MineColonies
+ * Colony hearth (a TFC firepit look; the id stays {@code colony_campfire}): founds the colony and is its centre. Extends the town hall block, because MineColonies
  * recognises the colony centre with {@code instanceof BlockHutTownHall}.
  */
 public class BlockColonyCampfire extends BlockHutTownHall
 {
     public static final String NAME = "colony_campfire";
 
-    private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 0.4375, 1);
+    private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 0.125, 1);
 
     @NotNull
     @Override

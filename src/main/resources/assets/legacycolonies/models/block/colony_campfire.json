@@ -1,4 +1,4 @@
 {
-  "parent": "minecraft:block/campfire",
+  "parent": "tfc:block/firepit_lit",
   "render_type": "minecraft:cutout"
 }
