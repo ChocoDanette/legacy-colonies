@@ -4,6 +4,16 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.10.0
+
+- The school has an "Heir" button in its window. It opens the heir window: the character's traits, each with a "Drop"
+  button, and the other traits, each with an "Add" button. Each level of the school allows one change (1 at level 1,
+  2 at level 2), and the heir never has more than 3 traits, so a full character drops a trait before adding one.
+  Opposite traits cannot be added together. The changes are saved in the player's KubeJS data (`legacy_school`,
+  e.g. `add:fort,drop:delicat`), which the modpack's script applies when a married character dies.
+- The traits the window lists come from the datapacks, one file per trait in `legacycolonies/traits/<trait>.json`
+  (`label`, `description`, `opposites`).
+
 ## 0.9.1
 
 - No diseases: citizens never get sick, and a citizen already sick is cured. The MineColonies cures (vanilla carrot,

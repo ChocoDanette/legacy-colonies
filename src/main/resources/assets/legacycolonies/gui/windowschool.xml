@@ -1,0 +1,33 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd">
+    <image source="minecolonies:textures/gui/builderhut/builder_paper_wide2.png" size="400 244"/>
+
+    <text id="title" size="100% 11" pos="0 12" textalign="MIDDLE" color="black"/>
+    <text id="summary" size="360 20" pos="20 26" color="black" textscale="0.8"/>
+
+    <text size="175 10" pos="20 50" color="black" label="$(com.legacycolonies.school.current)"/>
+    <list id="current" size="175 140" pos="20 62">
+        <view size="100% 30">
+            <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
+            <text id="name" size="120 10" pos="4 2" color="blue"/>
+            <text id="desc" size="120 16" pos="4 13" color="black" textscale="0.7"/>
+            <button id="drop" size="44 10" pos="126 4" color="black"
+                    source="minecolonies:textures/gui/builderhut/builder_button_quite_small.png" textscale="0.8"/>
+        </view>
+    </list>
+
+    <text size="175 10" pos="205 50" color="black" label="$(com.legacycolonies.school.others)"/>
+    <list id="others" size="175 140" pos="205 62">
+        <view size="100% 30">
+            <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
+            <text id="name" size="120 10" pos="4 2" color="blue"/>
+            <text id="desc" size="120 16" pos="4 13" color="black" textscale="0.7"/>
+            <button id="add" size="44 10" pos="126 4" color="black"
+                    source="minecolonies:textures/gui/builderhut/builder_button_quite_small.png" textscale="0.8"/>
+        </view>
+    </list>
+
+    <text id="plan" size="360 24" pos="20 208" color="black" textscale="0.75"/>
+
+    <button id="cancel" size="14 15" pos="375 10" source="minecolonies:textures/gui/button_x.png" color="black"/>
+</window>

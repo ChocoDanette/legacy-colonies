@@ -20,6 +20,10 @@ import com.chocodanette.legacycolonies.network.BuildModesPayload;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
 import com.chocodanette.legacycolonies.network.MaterialChoicesPayload;
+import com.chocodanette.legacycolonies.network.SchoolChangePayload;
+import com.chocodanette.legacycolonies.network.SchoolOpenPayload;
+import com.chocodanette.legacycolonies.network.SchoolPlanPayload;
+import com.chocodanette.legacycolonies.school.TraitCatalog;
 import com.chocodanette.legacycolonies.validation.BuildingRulesManager;
 import com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers;
 import com.minecolonies.api.IMinecoloniesAPI;
@@ -64,6 +68,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(CampfireInteractionHandler.class);
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
+        NeoForge.EVENT_BUS.register(TraitCatalog.class);
         NeoForge.EVENT_BUS.register(ColonyArrivals.class);
         NeoForge.EVENT_BUS.register(ColonyRations.class);
         NeoForge.EVENT_BUS.register(NeedsCommand.class);
@@ -118,7 +123,10 @@ public class LegacyColonies
           .playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle)
           .playToClient(BuildModesPayload.TYPE, BuildModesPayload.STREAM_CODEC, BuildModesPayload::handle)
           .playToClient(BuildingRulesPayload.TYPE, BuildingRulesPayload.STREAM_CODEC, BuildingRulesPayload::handle)
-          .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle);
+          .playToClient(SchoolPlanPayload.TYPE, SchoolPlanPayload.STREAM_CODEC, SchoolPlanPayload::handle)
+          .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle)
+          .playToServer(SchoolOpenPayload.TYPE, SchoolOpenPayload.STREAM_CODEC, SchoolOpenPayload::handle)
+          .playToServer(SchoolChangePayload.TYPE, SchoolChangePayload.STREAM_CODEC, SchoolChangePayload::handle);
     }
 
     private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)
