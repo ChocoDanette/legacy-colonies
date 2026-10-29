@@ -4,6 +4,19 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.12.0
+
+- Material pile. When the builder starts a work order (build, upgrade, repair), a material pile
+  (`legacycolonies:material_pile`, a TFC log pile) appears on the ground just outside the site, as close to the hut
+  as can be, and the players of the colony get a message. It holds exactly the materials the builder listed for the
+  work order: right click with an item puts it in (never more than needed), crouching puts in every needed item of the
+  inventory, an empty hand lists what is missing. The pile grows as it fills.
+- The builder waits until the pile is complete, then starts and takes its materials from it, as from a rack of its
+  post. Other workers and the builder's own dumps never put anything in it.
+- When the building is done, what is left in the pile goes to the builder's stock and the pile disappears. If the work
+  order goes away otherwise (cancelled, hut broken), the pile drops what it holds within 5 seconds and disappears.
+  Players cannot break it.
+
 ## 0.11.0
 
 - The builder uses tools. For each block it takes the fastest tool of the right kind from its inventory and breaks

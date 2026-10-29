@@ -59,6 +59,7 @@ public class LegacyColonies
     {
         ModBlocks.BLOCKS.register(modBus);
         ModBlocks.ITEMS.register(modBus);
+        ModBlocks.BLOCK_ENTITIES.register(modBus);
         ModBuildings.BUILDINGS.register(modBus);
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(this::onCreativeTab);
