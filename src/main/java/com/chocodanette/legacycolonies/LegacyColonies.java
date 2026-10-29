@@ -1,6 +1,7 @@
 package com.chocodanette.legacycolonies;
 
 import com.chocodanette.legacycolonies.colony.BuildModeHandler;
+import com.chocodanette.legacycolonies.colony.BuilderTools;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
 import com.chocodanette.legacycolonies.colony.CampfireInteractionHandler;
 import com.chocodanette.legacycolonies.colony.HutPlacementHandler;
@@ -69,6 +70,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
         NeoForge.EVENT_BUS.register(TraitCatalog.class);
+        NeoForge.EVENT_BUS.register(BuilderTools.class);
         NeoForge.EVENT_BUS.register(ColonyArrivals.class);
         NeoForge.EVENT_BUS.register(ColonyRations.class);
         NeoForge.EVENT_BUS.register(NeedsCommand.class);

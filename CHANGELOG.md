@@ -4,6 +4,19 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.11.0
+
+- The builder uses tools. For each block it takes the fastest tool of the right kind from its inventory and breaks
+  and places that block faster: axe for wood, shovel for soil, sand, gravel and mud bricks, scythe for plants, leaves
+  and thatch, pickaxe for stone and the other pickaxe blocks. A bare hand works at speed 1; stone tools ×1.1,
+  copper ×1.3, bronzes ×1.5, wrought iron ×1.7, steel ×2, black steel ×2.3, blue and red steel ×2.6. Tools wear when
+  the builder breaks blocks, not when it places them.
+- Stone needs a pickaxe (TFC has none in stone, so from the copper age). Without one the builder neither breaks nor
+  places stone (rock, cobble, bricks, smooth rock, rock anvils, sandstone, alabaster): it asks for a pickaxe and waits.
+  Loose rocks on the ground, soil, wood and mud bricks can still be worked by hand.
+- The tools, their blocks and their speeds are data, in `legacycolonies/builder_tools/<name>.json`; the stone is the
+  block tag `legacycolonies:builder/stone`. A datapack can replace both.
+
 ## 0.10.0
 
 - The school has an "Heir" button in its window. It opens the heir window: the character's traits, each with a "Drop"
