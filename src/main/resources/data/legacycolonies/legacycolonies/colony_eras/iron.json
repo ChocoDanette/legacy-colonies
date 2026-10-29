@@ -15,6 +15,10 @@
     "legacycolonies:granary": {
       "max_count": 1,
       "max_level": 2
+    },
+    "legacycolonies:school": {
+      "max_count": 1,
+      "max_level": 2
     }
   }
 }

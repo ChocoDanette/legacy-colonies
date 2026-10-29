@@ -4,6 +4,13 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.9.0
+
+- New hut without a worker: the school (`legacycolonies:school`), with the MineColonies school model. Level 1 needs a
+  lectern and 2 bookshelves, level 2 a lectern and 4 bookshelves (TFC wood or vanilla). A colony may build one: level 1
+  from the copper age, level 2 from the iron age. The modpack uses its level to let the player choose the traits of the
+  heir.
+
 ## 0.8.3
 
 - Beds no longer get lost. When a citizen goes to sleep, MineColonies forgets a registered bed that is not in the

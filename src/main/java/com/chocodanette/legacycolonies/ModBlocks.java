@@ -6,6 +6,7 @@ import com.chocodanette.legacycolonies.block.BlockForge;
 import com.chocodanette.legacycolonies.block.BlockGranary;
 import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
+import com.chocodanette.legacycolonies.block.BlockSchool;
 import com.chocodanette.legacycolonies.block.BlockStable;
 import com.chocodanette.legacycolonies.block.BlockWarehouse;
 import com.minecolonies.api.items.ItemBlockHut;
@@ -30,6 +31,7 @@ public final class ModBlocks
     public static final DeferredBlock<BlockForge>          FORGE           = BLOCKS.register(BlockForge.NAME, BlockForge::new);
     public static final DeferredBlock<BlockStable>         STABLE          = BLOCKS.register(BlockStable.NAME, BlockStable::new);
     public static final DeferredBlock<BlockWarehouse>      WAREHOUSE       = BLOCKS.register(BlockWarehouse.NAME, BlockWarehouse::new);
+    public static final DeferredBlock<BlockSchool>         SCHOOL          = BLOCKS.register(BlockSchool.NAME, BlockSchool::new);
 
     public static final DeferredItem<Item> COLONY_CAMPFIRE_ITEM =
       ITEMS.register(BlockColonyCampfire.NAME, () -> new ItemBlockHut(COLONY_CAMPFIRE.get(), new Item.Properties()));
@@ -45,6 +47,8 @@ public final class ModBlocks
       ITEMS.register(BlockStable.NAME, () -> new ItemBlockHut(STABLE.get(), new Item.Properties()));
     public static final DeferredItem<Item> WAREHOUSE_ITEM =
       ITEMS.register(BlockWarehouse.NAME, () -> new ItemBlockHut(WAREHOUSE.get(), new Item.Properties()));
+    public static final DeferredItem<Item> SCHOOL_ITEM =
+      ITEMS.register(BlockSchool.NAME, () -> new ItemBlockHut(SCHOOL.get(), new Item.Properties()));
 
     private ModBlocks()
     {
