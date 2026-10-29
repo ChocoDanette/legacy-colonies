@@ -4,6 +4,38 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.12.0
+
+- Material pile. When the builder starts a work order (build, upgrade, repair), a material pile
+  (`legacycolonies:material_pile`, a TFC log pile) appears on the ground just outside the site, as close to the hut
+  as can be, and the players of the colony get a message. It holds exactly the materials the builder listed for the
+  work order: right click with an item puts it in (never more than needed), crouching puts in every needed item of the
+  inventory, an empty hand lists what is missing. The pile grows as it fills.
+- The builder waits until the pile is complete, then starts and takes its materials from it: when it needs the items
+  of the next block, it takes them from the pile (a stack at a time) instead of asking for them. While it works from a
+  pile it asks for no materials, and the requests it made before for items the pile holds are cancelled. Other
+  workers and the builder's own dumps never put anything in the pile.
+- The builder builds with the pile's materials only. When it starts from the pile, everything it carries but its tools
+  goes to its stock. For each block, it may only use, of the pile's materials, items it took from the pile, not items
+  from its stock or that it dug up. If the work order needs more than it listed, the pile asks for the rest (message
+  to the players) and the builder waits for it.
+- When the building is done, what is left in the pile goes to the builder's stock and the pile disappears. If the work
+  order goes away otherwise (cancelled, hut broken), the pile drops what it holds within 5 seconds and disappears.
+  Players cannot break it.
+
+## 0.11.0
+
+- The builder uses tools. For each block it takes the fastest tool of the right kind from its inventory and breaks
+  and places that block faster: axe for wood, shovel for soil, sand, gravel and mud bricks, scythe for plants, leaves
+  and thatch, pickaxe for stone and the other pickaxe blocks. A bare hand works at speed 1; stone tools ×1.1,
+  copper ×1.3, bronzes ×1.5, wrought iron ×1.7, steel ×2, black steel ×2.3, blue and red steel ×2.6. Tools wear when
+  the builder breaks blocks, not when it places them.
+- Stone needs a pickaxe (TFC has none in stone, so from the copper age). Without one the builder neither breaks nor
+  places stone (rock, cobble, bricks, smooth rock, rock anvils, sandstone, alabaster): it asks for a pickaxe and waits.
+  Loose rocks on the ground, soil, wood and mud bricks can still be worked by hand.
+- The tools, their blocks and their speeds are data, in `legacycolonies/builder_tools/<name>.json`; the stone is the
+  block tag `legacycolonies:builder/stone`. A datapack can replace both.
+
 ## 0.10.0
 
 - The school has an "Heir" button in its window. It opens the heir window: the character's traits, each with a "Drop"

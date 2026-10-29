@@ -6,12 +6,17 @@ import com.chocodanette.legacycolonies.block.BlockForge;
 import com.chocodanette.legacycolonies.block.BlockGranary;
 import com.chocodanette.legacycolonies.block.BlockHouse;
 import com.chocodanette.legacycolonies.block.BlockInn;
+import com.chocodanette.legacycolonies.block.BlockMaterialPile;
 import com.chocodanette.legacycolonies.block.BlockSchool;
 import com.chocodanette.legacycolonies.block.BlockStable;
 import com.chocodanette.legacycolonies.block.BlockWarehouse;
+import com.chocodanette.legacycolonies.pile.MaterialPileBlockEntity;
 import com.minecolonies.api.items.ItemBlockHut;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -22,6 +27,7 @@ public final class ModBlocks
 {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LegacyColonies.MOD_ID);
     public static final DeferredRegister.Items  ITEMS  = DeferredRegister.createItems(LegacyColonies.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LegacyColonies.MOD_ID);
 
     public static final DeferredBlock<BlockColonyCampfire> COLONY_CAMPFIRE = BLOCKS.register(BlockColonyCampfire.NAME, BlockColonyCampfire::new);
     public static final DeferredBlock<BlockBuilderPost>    BUILDER_POST    = BLOCKS.register(BlockBuilderPost.NAME, BlockBuilderPost::new);
@@ -32,6 +38,10 @@ public final class ModBlocks
     public static final DeferredBlock<BlockStable>         STABLE          = BLOCKS.register(BlockStable.NAME, BlockStable::new);
     public static final DeferredBlock<BlockWarehouse>      WAREHOUSE       = BLOCKS.register(BlockWarehouse.NAME, BlockWarehouse::new);
     public static final DeferredBlock<BlockSchool>         SCHOOL          = BLOCKS.register(BlockSchool.NAME, BlockSchool::new);
+    public static final DeferredBlock<BlockMaterialPile>   MATERIAL_PILE   = BLOCKS.register(BlockMaterialPile.NAME, BlockMaterialPile::new);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaterialPileBlockEntity>> MATERIAL_PILE_ENTITY =
+      BLOCK_ENTITIES.register(BlockMaterialPile.NAME, () -> BlockEntityType.Builder.of(MaterialPileBlockEntity::new, MATERIAL_PILE.get()).build(null));
 
     public static final DeferredItem<Item> COLONY_CAMPFIRE_ITEM =
       ITEMS.register(BlockColonyCampfire.NAME, () -> new ItemBlockHut(COLONY_CAMPFIRE.get(), new Item.Properties()));

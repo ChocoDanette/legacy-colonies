@@ -1,0 +1,21 @@
+{
+  "tools": [
+    { "name": "pickaxe", "items": "#minecraft:pickaxes", "blocks": ["#legacycolonies:builder/stone"], "required": true },
+    { "name": "axe", "items": "#minecraft:axes", "blocks": ["#minecraft:mineable/axe"] },
+    { "name": "shovel", "items": "#minecraft:shovels", "blocks": ["#minecraft:mineable/shovel"] },
+    { "name": "scythe", "items": "#c:tools/scythe", "blocks": ["#minecraft:mineable/hoe"] },
+    { "name": "pickaxe", "items": "#minecraft:pickaxes", "blocks": ["#minecraft:mineable/pickaxe"] }
+  ],
+  "speeds": [
+    { "items": "#tfc:tools/stone", "multiplier": 1.1 },
+    { "items": "#tfc:tools/copper", "multiplier": 1.3 },
+    { "items": "#tfc:tools/bismuth_bronze", "multiplier": 1.5 },
+    { "items": "#tfc:tools/black_bronze", "multiplier": 1.5 },
+    { "items": "#tfc:tools/bronze", "multiplier": 1.5 },
+    { "items": "#tfc:tools/wrought_iron", "multiplier": 1.7 },
+    { "items": "#tfc:tools/steel", "multiplier": 2.0 },
+    { "items": "#tfc:tools/black_steel", "multiplier": 2.3 },
+    { "items": "#tfc:tools/blue_steel", "multiplier": 2.6 },
+    { "items": "#tfc:tools/red_steel", "multiplier": 2.6 }
+  ]
+}
