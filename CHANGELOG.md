@@ -6,8 +6,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 
 ## 0.13.0
 
-- Character window. The P key (in the controls' "Legacy" category) or the "Character" button above the inventory
-  opens the character sheet: name, generation, spouse and colony; the character's traits with their effect; stats
+- Character window. The P key (in the controls' "Legacy" category), in game or from the inventory, opens the
+  character sheet: name, generation, spouse and colony; the character's traits with their effect; stats
   read on the player (max health, damage, safe fall, crafting time, Inventory Free slots), each with its difference to
   an ordinary character in green or red; and what the school planned for the heir.
 - The stats are data files, `data/<namespace>/legacycolonies/character_stats/<stat>.json` (`label`, `attribute` or
