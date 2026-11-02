@@ -11,12 +11,17 @@ import java.util.List;
 
 /**
  * The player's character, kept by the modpack's KubeJS script in the player's KubeJS data ({@code player.persistentData}):
- * first name, traits, spouse, and the school's changes for the heir. Read through reflection: KubeJS is not a
+ * names, generation, traits, spouse, and the school's changes for the heir. Read through reflection: KubeJS is not a
  * dependency of the addon.
  */
 public final class CharacterData
 {
     public static final String FIRST_NAME = "legacy_first_name";
+    public static final String LAST_NAME = "legacy_last_name";
+    /**
+     * 1 for a character without a parent, +1 for each heir.
+     */
+    public static final String GENERATION = "legacy_generation";
     public static final String TRAITS = "legacy_traits";
     public static final String SPOUSE = "legacy_spouse";
     /**

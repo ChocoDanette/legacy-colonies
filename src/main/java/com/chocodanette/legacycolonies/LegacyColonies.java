@@ -1,5 +1,6 @@
 package com.chocodanette.legacycolonies;
 
+import com.chocodanette.legacycolonies.character.CharacterStats;
 import com.chocodanette.legacycolonies.colony.BuildModeHandler;
 import com.chocodanette.legacycolonies.colony.BuilderTools;
 import com.chocodanette.legacycolonies.colony.BuilderPostHandler;
@@ -20,6 +21,8 @@ import com.chocodanette.legacycolonies.needs.EraRulesManager;
 import com.chocodanette.legacycolonies.needs.NeedsCommand;
 import com.chocodanette.legacycolonies.network.BuildModesPayload;
 import com.chocodanette.legacycolonies.network.BuildingRulesPayload;
+import com.chocodanette.legacycolonies.network.CharacterOpenPayload;
+import com.chocodanette.legacycolonies.network.CharacterSheetPayload;
 import com.chocodanette.legacycolonies.network.ConfirmBuildingPayload;
 import com.chocodanette.legacycolonies.network.FirepitFoundingPayload;
 import com.chocodanette.legacycolonies.network.FoundColonyPayload;
@@ -75,6 +78,7 @@ public class LegacyColonies
         NeoForge.EVENT_BUS.register(BuildingRulesManager.class);
         NeoForge.EVENT_BUS.register(EraRulesManager.class);
         NeoForge.EVENT_BUS.register(TraitCatalog.class);
+        NeoForge.EVENT_BUS.register(CharacterStats.class);
         NeoForge.EVENT_BUS.register(BuilderTools.class);
         NeoForge.EVENT_BUS.register(ColonyArrivals.class);
         NeoForge.EVENT_BUS.register(ColonyRations.class);
@@ -126,16 +130,18 @@ public class LegacyColonies
 
     private void onRegisterPayloads(final RegisterPayloadHandlersEvent event)
     {
-        event.registrar("1")
+        event.registrar("2")
           .playToClient(MaterialChoicesPayload.TYPE, MaterialChoicesPayload.STREAM_CODEC, MaterialChoicesPayload::handle)
           .playToClient(BuildModesPayload.TYPE, BuildModesPayload.STREAM_CODEC, BuildModesPayload::handle)
           .playToClient(BuildingRulesPayload.TYPE, BuildingRulesPayload.STREAM_CODEC, BuildingRulesPayload::handle)
           .playToClient(SchoolPlanPayload.TYPE, SchoolPlanPayload.STREAM_CODEC, SchoolPlanPayload::handle)
           .playToClient(FirepitFoundingPayload.TYPE, FirepitFoundingPayload.STREAM_CODEC, FirepitFoundingPayload::handle)
+          .playToClient(CharacterSheetPayload.TYPE, CharacterSheetPayload.STREAM_CODEC, CharacterSheetPayload::handle)
           .playToServer(ConfirmBuildingPayload.TYPE, ConfirmBuildingPayload.STREAM_CODEC, ConfirmBuildingPayload::handle)
           .playToServer(SchoolOpenPayload.TYPE, SchoolOpenPayload.STREAM_CODEC, SchoolOpenPayload::handle)
           .playToServer(SchoolChangePayload.TYPE, SchoolChangePayload.STREAM_CODEC, SchoolChangePayload::handle)
-          .playToServer(FoundColonyPayload.TYPE, FoundColonyPayload.STREAM_CODEC, FoundColonyPayload::handle);
+          .playToServer(FoundColonyPayload.TYPE, FoundColonyPayload.STREAM_CODEC, FoundColonyPayload::handle)
+          .playToServer(CharacterOpenPayload.TYPE, CharacterOpenPayload.STREAM_CODEC, CharacterOpenPayload::handle);
     }
 
     private void onCreativeTab(final BuildCreativeModeTabContentsEvent event)

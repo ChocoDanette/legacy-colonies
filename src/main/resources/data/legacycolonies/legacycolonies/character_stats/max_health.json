@@ -1,0 +1,5 @@
+{
+  "label": "com.legacycolonies.character.stat.max_health",
+  "attribute": "minecraft:generic.max_health",
+  "order": 10
+}

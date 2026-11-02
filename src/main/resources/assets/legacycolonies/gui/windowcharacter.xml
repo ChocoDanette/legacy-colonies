@@ -1,0 +1,30 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd">
+    <image source="minecolonies:textures/gui/builderhut/builder_paper_wide2.png" size="400 244"/>
+
+    <text id="title" size="100% 11" pos="0 12" textalign="MIDDLE" color="black"/>
+    <text id="identity" size="360 10" pos="20 26" textalign="MIDDLE" color="black" textscale="0.8"/>
+
+    <text size="175 10" pos="20 46" color="black" label="$(com.legacycolonies.character.traits)"/>
+    <text id="notraits" size="175 10" pos="24 60" color="black" textscale="0.8"/>
+    <list id="traits" size="175 160" pos="20 58">
+        <view size="100% 30">
+            <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
+            <text id="name" size="150 10" pos="4 2" color="blue"/>
+            <text id="desc" size="150 16" pos="4 13" color="black" textscale="0.7"/>
+        </view>
+    </list>
+
+    <text size="175 10" pos="205 46" color="black" label="$(com.legacycolonies.character.stats)"/>
+    <list id="stats" size="175 96" pos="205 58">
+        <view size="100% 14">
+            <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
+            <text id="stat" size="150 10" pos="4 3" color="black" textscale="0.8"/>
+        </view>
+    </list>
+
+    <text size="175 10" pos="205 162" color="black" label="$(com.legacycolonies.character.heir)"/>
+    <text id="heir" size="165 50" pos="205 174" color="black" textscale="0.75"/>
+
+    <button id="cancel" size="14 15" pos="375 10" source="minecolonies:textures/gui/button_x.png" color="black"/>
+</window>

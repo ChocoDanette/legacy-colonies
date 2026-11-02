@@ -1,0 +1,5 @@
+{
+  "label": "com.legacycolonies.character.stat.attack_damage",
+  "attribute": "minecraft:generic.attack_damage",
+  "order": 20
+}

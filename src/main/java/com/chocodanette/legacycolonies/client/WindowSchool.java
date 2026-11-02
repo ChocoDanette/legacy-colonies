@@ -81,19 +81,19 @@ public class WindowSchool extends AbstractWindowSkeleton
             return Component.translatable(KEY + "plan.none");
         }
         return Component.translatable(KEY + "plan",
-          sure.isEmpty() ? Component.translatable(KEY + "plan.nothing") : Component.literal(String.join(", ", sure)),
-          dropped.isEmpty() ? Component.translatable(KEY + "plan.nothing") : Component.literal(String.join(", ", dropped)));
+          sure.isEmpty() ? Component.translatable(KEY + "plan.nothing") : TraitText.list(sure),
+          dropped.isEmpty() ? Component.translatable(KEY + "plan.nothing") : TraitText.list(dropped));
     }
 
     private void updateRow(final Pane row, final TraitRow trait, final boolean current)
     {
-        final MutableComponent name = Component.literal(trait.label());
+        final MutableComponent name = Component.translatable(trait.label());
         if (trait.chosen())
         {
             name.append(" ").append(Component.translatable(KEY + (current ? "dropped" : "added")).withStyle(current ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN));
         }
         row.findPaneOfTypeByID("name", Text.class).setText(name);
-        row.findPaneOfTypeByID("desc", Text.class).setText(Component.literal(trait.description()));
+        row.findPaneOfTypeByID("desc", Text.class).setText(Component.translatable(trait.description()));
         final Button button = row.findPaneOfTypeByID(current ? "drop" : "add", Button.class);
         button.setText(Component.translatable(KEY + (trait.chosen() ? (current ? "keep" : "cancel") : (current ? "drop" : "add"))));
         button.setEnabled(trait.available());

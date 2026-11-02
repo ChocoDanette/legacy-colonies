@@ -27,8 +27,8 @@ public final class TraitCatalog extends SimpleJsonResourceReloadListener
     public static final TraitCatalog INSTANCE = new TraitCatalog();
 
     /**
-     * @param label       name shown in the window.
-     * @param description effect shown under the name.
+     * @param label       name shown in the window: a translation key, or plain text.
+     * @param description effect shown under the name: a translation key, or plain text.
      * @param opposites   traits a character never has together with this one.
      */
     public record Trait(String label, String description, List<String> opposites)

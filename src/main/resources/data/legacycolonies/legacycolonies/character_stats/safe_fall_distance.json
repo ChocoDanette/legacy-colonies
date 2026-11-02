@@ -1,0 +1,6 @@
+{
+  "label": "com.legacycolonies.character.stat.safe_fall_distance",
+  "attribute": "minecraft:generic.safe_fall_distance",
+  "unit": "com.legacycolonies.character.unit.blocks",
+  "order": 30
+}
