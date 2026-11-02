@@ -99,12 +99,12 @@ public class WindowCharacter extends AbstractWindowSkeleton
     }
 
     /**
-     * "Max health  24 (+4)", the difference in green when it helps the character and in red when it hinders them.
+     * "Max health: 24 (+4)" on one line, the difference in green when it helps the character and in red when it hinders them.
      */
     private void updateStat(final Pane row, final StatRow stat)
     {
-        row.findPaneOfTypeByID("name", Text.class).setText(Component.translatable(stat.label()));
-        final MutableComponent value = Component.literal(stat.multiplier() ? "×" + number(stat.value()) : number(stat.value()));
+        final MutableComponent value = Component.translatable(KEY + "stat", Component.translatable(stat.label()),
+          stat.multiplier() ? "×" + number(stat.value()) : number(stat.value()));
         if (!stat.unit().isEmpty())
         {
             value.append(" ").append(Component.translatable(stat.unit()));
@@ -117,7 +117,7 @@ public class WindowCharacter extends AbstractWindowSkeleton
             final String amount = stat.multiplier() ? sign + Math.round(Math.abs(delta / stat.base()) * 100) + " %" : sign + number(Math.abs(delta));
             value.append(" ").append(Component.literal("(" + amount + ")").withStyle(good ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
-        row.findPaneOfTypeByID("value", Text.class).setText(value);
+        row.findPaneOfTypeByID("stat", Text.class).setText(value);
     }
 
     /**

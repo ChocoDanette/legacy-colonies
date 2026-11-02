@@ -35,6 +35,7 @@
   "com.legacycolonies.character.heir.plan": "Ton héritier aura : %s. N'aura pas : %s. Tes autres traits ont chacun 70 % de chances de lui passer.",
   "com.legacycolonies.character.heir.unmarried": "Pas d'héritier : il faut être marié. À ta mort, un nouveau personnage commencera une nouvelle lignée.",
   "com.legacycolonies.character.married": "marié à %s",
+  "com.legacycolonies.character.stat": "%s : %s",
   "com.legacycolonies.character.stat.attack_damage": "Dégâts",
   "com.legacycolonies.character.stat.crafting_time": "Durée de fabrication",
   "com.legacycolonies.character.stat.inventory_slots": "Cases d'inventaire",

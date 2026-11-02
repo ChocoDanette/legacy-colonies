@@ -10,8 +10,8 @@
     <list id="traits" size="175 160" pos="20 58">
         <view size="100% 30">
             <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
-            <text id="name" size="165 10" pos="4 2" color="blue"/>
-            <text id="desc" size="165 16" pos="4 13" color="black" textscale="0.7"/>
+            <text id="name" size="150 10" pos="4 2" color="blue"/>
+            <text id="desc" size="150 16" pos="4 13" color="black" textscale="0.7"/>
         </view>
     </list>
 
@@ -19,13 +19,12 @@
     <list id="stats" size="175 96" pos="205 58">
         <view size="100% 14">
             <gradient gradientstart="430265344" gradientend="430265344" size="100% 100%"/>
-            <text id="name" size="100 10" pos="4 3" color="black" textscale="0.8"/>
-            <text id="value" size="70 10" pos="102 3" color="black" textscale="0.8" textalign="TOP_RIGHT"/>
+            <text id="stat" size="150 10" pos="4 3" color="black" textscale="0.8"/>
         </view>
     </list>
 
     <text size="175 10" pos="205 162" color="black" label="$(com.legacycolonies.character.heir)"/>
-    <text id="heir" size="175 50" pos="205 174" color="black" textscale="0.75"/>
+    <text id="heir" size="165 50" pos="205 174" color="black" textscale="0.75"/>
 
     <button id="cancel" size="14 15" pos="375 10" source="minecolonies:textures/gui/button_x.png" color="black"/>
 </window>
