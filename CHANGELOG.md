@@ -4,6 +4,16 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.13.0
+
+- Character window. The P key (in the controls' "Legacy" category) or the "Character" button above the inventory
+  opens the character sheet: name, generation, spouse and colony; the character's traits with their effect; stats
+  read on the player (max health, damage, safe fall, crafting time, Inventory Free slots), each with its difference to
+  an ordinary character in green or red; and what the school planned for the heir.
+- The stats are data files, `data/<namespace>/legacycolonies/character_stats/<stat>.json` (`label`, `attribute` or
+  `"source": "inventory_slots"`, `multiplier`, `lower_is_better`, `unit`, `order`): a modpack replaces or adds them.
+  A stat whose attribute or mod is missing is not shown. Labels and units are translation keys or plain text.
+
 ## 0.12.1
 
 - The colony campfire becomes the colony hearth ("Foyer de colonie"): it looks like a lit TFC firepit, gives light,
