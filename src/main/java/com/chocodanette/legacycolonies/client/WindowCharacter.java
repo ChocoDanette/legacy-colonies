@@ -88,14 +88,14 @@ public class WindowCharacter extends AbstractWindowSkeleton
             return Component.translatable(KEY + "heir.none");
         }
         return Component.translatable(KEY + "heir.plan",
-          sheet.added().isEmpty() ? Component.translatable(KEY + "heir.nothing") : Component.literal(String.join(", ", sheet.added())),
-          sheet.dropped().isEmpty() ? Component.translatable(KEY + "heir.nothing") : Component.literal(String.join(", ", sheet.dropped())));
+          sheet.added().isEmpty() ? Component.translatable(KEY + "heir.nothing") : TraitText.list(sheet.added()),
+          sheet.dropped().isEmpty() ? Component.translatable(KEY + "heir.nothing") : TraitText.list(sheet.dropped()));
     }
 
     private void updateTrait(final Pane row, final TraitRow trait)
     {
-        row.findPaneOfTypeByID("name", Text.class).setText(Component.literal(trait.label()));
-        row.findPaneOfTypeByID("desc", Text.class).setText(Component.literal(trait.description()));
+        row.findPaneOfTypeByID("name", Text.class).setText(Component.translatable(trait.label()));
+        row.findPaneOfTypeByID("desc", Text.class).setText(Component.translatable(trait.description()));
     }
 
     /**

@@ -13,6 +13,8 @@ from the Actions tab (it creates the tag `v<mod_version>`), or push that tag you
 - The stats are data files, `data/<namespace>/legacycolonies/character_stats/<stat>.json` (`label`, `attribute` or
   `"source": "inventory_slots"`, `multiplier`, `lower_is_better`, `unit`, `order`): a modpack replaces or adds them.
   A stat whose attribute or mod is missing is not shown. Labels and units are translation keys or plain text.
+- Trait labels and descriptions (`legacycolonies/traits/<trait>.json`) may be translation keys: the school and
+  character windows show them in the player's language. Plain text still shows as written.
 
 ## 0.12.1
 
