@@ -4,6 +4,11 @@ Each version is published as a GitHub release with its jar. To release, set `mod
 `gradle.properties`, add its section below, merge to `main`, then run the Release workflow
 from the Actions tab (it creates the tag `v<mod_version>`), or push that tag yourself.
 
+## 0.13.1
+
+- Legacy Colonies is now free software under the GNU General Public License v3.0 (`LICENSE`), like MineColonies.
+  No change in game.
+
 ## 0.13.0
 
 - Character window. The P key (in the controls' "Legacy" category), in game or from the inventory, opens the
