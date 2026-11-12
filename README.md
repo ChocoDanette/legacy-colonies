@@ -5,3 +5,7 @@ MineColonies addon for the TerraFirmaCraft Legacy modpack (Minecraft 1.21.1, Neo
 Released versions are on the Releases page of this repository, each with its jar and changelog (see `CHANGELOG.md`).
 GitHub Actions also builds a test jar on every push: open the latest run in the Actions tab and download `legacycolonies-jar`.
 Local build: `gradle build` (Gradle 8.10+, Java 21). The jar is written to `build/libs/`.
+
+## License
+
+GNU General Public License v3.0 only (GPL-3.0-only), see `LICENSE`.
